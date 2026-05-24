@@ -1774,13 +1774,11 @@ async function callOpenRouter(systemPrompt, messages) {
   let res;
   try {
     const requestBody = {
+      model: (state.settings.model && state.settings.model !== 'auto') ? state.settings.model : 'openrouter/auto',
       messages: fullMessages,
       max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
       temperature: 0.9,
     };
-    if (state.settings.model && state.settings.model !== 'auto') {
-      requestBody.model = state.settings.model;
-    }
 
     res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
