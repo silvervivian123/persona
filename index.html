@@ -1267,7 +1267,7 @@
         </div>
         <div class="checkbox-row">
           <input type="checkbox" id="charNsfw">
-          <label for="charNsfw">Allow NSFW content with this character</label>
+          <label for="charNsfw">Allow NSFW content với character này</label>
         </div>
         <div class="save-status" id="charSaveStatus">✓ saved</div>
       </div>
@@ -1318,20 +1318,15 @@
     <div class="field">
       <label class="field-label">AI Model</label>
       <select id="modelSelect">
-        <optgroup label="✦ Best for roleplay">
-          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 — best for creative / NSFW</option>
-          <option value="deepseek/deepseek-r1:free">DeepSeek R1 — deeper reasoning</option>
-          <option value="meta-llama/llama-4-maverick:free">Llama 4 Maverick</option>
-        </optgroup>
-        <optgroup label="Other free models">
-          <option value="qwen/qwen3-235b-a22b:free">Qwen3 235B</option>
-          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B</option>
-          <option value="google/gemma-3-27b-it:free">Gemma 3 27B</option>
-          <option value="mistralai/mistral-small-3.2-24b-instruct:free">Mistral Small 3.2</option>
+        <optgroup label="✦ Models miễn phí (Hoạt động tốt)">
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B — (Rất thông minh, hợp Roleplay)</option>
+          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash — (Văn phong sáng tạo, tự nhiên)</option>
+          <option value="google/gemma-2-9b-it:free">Gemma 2 9B — (Tốc độ phản hồi nhanh)</option>
+          <option value="mistralai/mistral-7b-instruct:free">Mistral 7B — (Cơ bản, ổn định)</option>
         </optgroup>
       </select>
       <div class="field-hint">
-        Free: ~50 requests/day per model. If one hits its limit, switch to another.
+        Free models limit: ~50 requests/day. If one hits its limit, switch to another.
       </div>
     </div>
 
@@ -1394,7 +1389,7 @@ const STORAGE = {
 let state = {
   persona: { name: '', appearance: '', dress: '', personality: '' },
   characters: {},
-  settings: { apiKey: '', model: 'deepseek/deepseek-chat-v3-0324:free' },
+  settings: { apiKey: '', model: 'meta-llama/llama-3.3-70b-instruct:free' },
   activeId: null,
   length: 'medium',
   nsfwSession: false,
@@ -1765,7 +1760,7 @@ async function callOpenRouter(systemPrompt, messages) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + state.settings.apiKey,
+        'Authorization': 'Bearer ' + state.settings.apiKey.trim(),
         'HTTP-Referer': window.location.origin || 'https://persona.local',
         'X-Title': 'Persona',
       },
