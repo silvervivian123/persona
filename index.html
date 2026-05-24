@@ -818,7 +818,7 @@
     display: block;
   }
 
-  .field input, .field textarea {
+  .field input, .field textarea, .field select {
     width: 100%;
     background: var(--bg);
     border: 1px solid var(--line-bright);
@@ -832,7 +832,14 @@
     appearance: none;
   }
 
-  .field input:focus, .field textarea:focus { border-color: var(--accent); }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239a948b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
   .field textarea { resize: vertical; min-height: 70px; font-family: 'Fraunces', serif; line-height: 1.55; }
 
   .field-hint {
@@ -1101,7 +1108,7 @@
     <div class="char-list" id="charList"></div>
 
     <div class="drawer-footer">
-      <button class="footer-btn" id="settingsBtn">⚙ API Key & Model</button>
+      <button class="footer-btn" id="settingsBtn">⚙ API Key</button>
       <button class="footer-btn" id="helpBtn">? Help</button>
       <button class="footer-btn" id="exportBtn">↓ Backup</button>
       <button class="footer-btn" id="importBtn">↑ Restore</button>
@@ -1152,7 +1159,7 @@
         <div class="step-card" id="stepProfile" data-action="profile">
           <div class="step-num" id="stepProfileNum">2</div>
           <div class="step-content">
-            <div class="step-title">Set up your {{user}} profile</div>
+            <div class="step-title">Set up your persona profile</div>
             <div class="step-desc">Your name, appearance, outfit, personality — so replies sound like you.</div>
           </div>
           <div class="step-arrow">→</div>
@@ -1178,7 +1185,7 @@
     <div class="empty-chat" id="emptyChat" style="display:none">
       <div class="ornament">‹ ✦ ›</div>
       <h2>ready when you are</h2>
-      <p>Paste what {{char}} said and tell me what you want to do next. The reply will appear here.</p>
+      <p>Paste what your character said and tell me what you want to do next. The reply will appear here.</p>
     </div>
   </div>
 
@@ -1187,7 +1194,7 @@
     <div class="input-block char">
       <div class="input-block-label">
         <span class="dot"></span>
-        <span>{{char}}'s last message</span>
+        <span>Character's last message</span>
       </div>
       <textarea id="charInput" placeholder="Paste what they just said..." rows="2"></textarea>
     </div>
@@ -1195,7 +1202,7 @@
     <div class="input-block note">
       <div class="input-block-label">
         <span class="dot"></span>
-        <span>what should {{user}} do?</span>
+        <span>what should you do?</span>
       </div>
       <textarea id="noteInput" placeholder="e.g. 'flirt back', 'push them away', 'kiss them'..." rows="2"></textarea>
     </div>
@@ -1222,7 +1229,7 @@
 
     <div class="panel-body">
       <div class="panel-section">
-        <div class="panel-title">Your {{user}}</div>
+<div class="panel-title">Your profile</div>
         <div class="panel-subtitle">how the AI writes you</div>
 
         <div class="field">
@@ -1251,7 +1258,7 @@
         <div class="panel-subtitle">who you're chatting with</div>
 
         <div class="field">
-          <label class="field-label">{{char}} Name</label>
+          <label class="field-label">Character Name</label>
           <input type="text" id="charName">
         </div>
         <div class="field">
@@ -1260,7 +1267,7 @@
         </div>
         <div class="checkbox-row">
           <input type="checkbox" id="charNsfw">
-          <label for="charNsfw">Allow NSFW content with this character</label>
+          <label for="charNsfw">Allow NSFW content với character này</label>
         </div>
         <div class="save-status" id="charSaveStatus">✓ saved</div>
       </div>
@@ -1276,7 +1283,7 @@
     <h2>new character</h2>
     <div class="modal-sub">✦ start a new chat</div>
     <div class="field">
-      <label class="field-label">{{char}} Name</label>
+      <label class="field-label">Character Name</label>
       <input type="text" id="newCharName" placeholder="e.g. Kaz, Kaelen, Mira">
     </div>
     <div class="field">
@@ -1297,28 +1304,30 @@
 <!-- ============ SETTINGS MODAL ============ -->
 <div class="modal-backdrop" id="settingsModal">
   <div class="modal">
-    <h2>api key & model</h2>
-    <div class="modal-sub">✦ connect to openrouter</div>
+    <h2>api key</h2>
+    <div class="modal-sub">✦ free models via openrouter</div>
 
     <div class="field">
       <label class="field-label">OpenRouter API Key</label>
       <input type="password" id="apiKey" placeholder="sk-or-v1-...">
       <div class="field-hint">
-        Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>. Stored locally.
+        Get a free one at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>. Stored only in this browser.
       </div>
     </div>
 
     <div class="field">
-      <label class="field-label">AI Model ID (Type or Paste)</label>
-      <input type="text" id="modelSelect" list="modelOptions" placeholder="e.g. google/gemini-2.0-flash-exp:free">
-      <datalist id="modelOptions">
-        <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Sáng tạo, Free)</option>
-        <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (Thông minh, Free)</option>
-        <option value="google/gemma-2-9b-it:free">Gemma 2 9B (Nhanh, Free)</option>
-        <option value="huggingfaceh4/zephyr-7b-beta:free">Zephyr 7B (Basic, Free)</option>
-      </datalist>
+      <label class="field-label">AI Model</label>
+      <select id="modelSelect">
+        <option value="auto">Auto — OpenRouter default</option>
+        <optgroup label="✦ Models miễn phí (Hoạt động tốt)">
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B — (Rất thông minh, hợp Roleplay)</option>
+          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash — (Văn phong sáng tạo, tự nhiên)</option>
+          <option value="google/gemma-2-9b-it:free">Gemma 2 9B — (Tốc độ phản hồi nhanh)</option>
+          <option value="mistralai/mistral-7b-instruct:free">Mistral 7B — (Cơ bản, ổn định)</option>
+        </optgroup>
+      </select>
       <div class="field-hint">
-        Nếu model bị lỗi 404, bạn hãy lên <a href="https://openrouter.ai/models?max_price=0" target="_blank">OpenRouter Models</a>, copy một Model ID mới đang miễn phí và dán vào đây.
+        Free models limit: ~50 requests/day. If one hits its limit, switch to another or use Auto to let OpenRouter choose your default model.
       </div>
     </div>
 
@@ -1337,15 +1346,15 @@
 
     <div class="help-content">
       <h3>What this is</h3>
-      <p>A helper that writes your <code>{{user}}</code> replies for Crushon.AI (or any roleplay app). You paste what the character said, tell it what you want to do, and copy the reply back into Crushon.</p>
+      <p>A helper that writes your replies for Crushon.AI (or any roleplay app). You paste what the character said, tell it what you want to do, and copy the reply back into Crushon.</p>
 
       <h3>First-time setup</h3>
-      <p><span class="step-num-inline">1</span> Get a free API key at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent)">openrouter.ai/keys</a> (sign in with Google). Paste it in <strong>⚙ API Key & Model</strong>.</p>
+      <p><span class="step-num-inline">1</span> Get a free API key at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent)">openrouter.ai/keys</a> (sign in with Google). Paste it in <strong>⚙ API Key</strong>.</p>
       <p><span class="step-num-inline">2</span> Tap <strong>👤 Me</strong> (top right) → fill in your character's name, appearance, outfit, personality.</p>
       <p><span class="step-num-inline">3</span> Tap <strong>☰ Chats</strong> → <strong>+ New</strong> → name the character you're roleplaying with.</p>
 
       <h3>Each turn</h3>
-      <p><span class="step-num-inline">A</span> Copy what <code>{{char}}</code> just said in Crushon → paste in the green box.</p>
+      <p><span class="step-num-inline">A</span> Copy what your character just said in Crushon → paste in the green box.</p>
       <p><span class="step-num-inline">B</span> Write a quick direction in the rose box — what you want to do/say.</p>
       <p><span class="step-num-inline">C</span> Tap <strong>Generate →</strong> → wait → tap <strong>📋 copy</strong> on the reply → paste into Crushon.</p>
 
@@ -1371,17 +1380,17 @@
    STATE
 ======================================================== */
 const STORAGE = {
-  PERSONA: 'persona_user_v4',
-  CHARS: 'persona_chars_v4',
-  SETTINGS: 'persona_settings_v4',
-  ACTIVE: 'persona_active_v4',
-  SEEN_WELCOME: 'persona_seen_welcome_v4',
+  PERSONA: 'persona_user_v3',
+  CHARS: 'persona_chars_v3',
+  SETTINGS: 'persona_settings_v3',
+  ACTIVE: 'persona_active_v3',
+  SEEN_WELCOME: 'persona_seen_welcome_v3',
 };
 
 let state = {
   persona: { name: '', appearance: '', dress: '', personality: '' },
   characters: {},
-  settings: { apiKey: '', model: 'google/gemini-2.0-flash-exp:free' },
+  settings: { apiKey: '', model: 'auto' },
   activeId: null,
   length: 'medium',
   nsfwSession: false,
@@ -1738,7 +1747,7 @@ function buildMessages(currentCharMsg, currentNote) {
 ======================================================== */
 async function callOpenRouter(systemPrompt, messages) {
   if (!state.settings.apiKey) {
-    throw new Error('No API key yet. Tap ☰ Chats → ⚙ API Key & Model');
+    throw new Error('No API key yet. Tap ☰ Chats → ⚙ API Key');
   }
 
   const fullMessages = [
@@ -1748,20 +1757,24 @@ async function callOpenRouter(systemPrompt, messages) {
 
   let res;
   try {
+    const requestBody = {
+      messages: fullMessages,
+      max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
+      temperature: 0.9,
+    };
+    if (state.settings.model && state.settings.model !== 'auto') {
+      requestBody.model = state.settings.model;
+    }
+
     res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + state.settings.apiKey.trim(),
-        'HTTP-Referer': window.location.href,
-        'X-Title': 'Persona Co-Writer',
+        'HTTP-Referer': window.location.origin || 'https://persona.local',
+        'X-Title': 'Persona',
       },
-      body: JSON.stringify({
-        model: state.settings.model.trim(),
-        messages: fullMessages,
-        max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
-        temperature: 0.9,
-      }),
+      body: JSON.stringify(requestBody),
     });
   } catch (netErr) {
     throw new Error('Network blocked. If you opened this as a file, host it on GitHub Pages or Netlify. See ? Help.');
@@ -1772,13 +1785,19 @@ async function callOpenRouter(systemPrompt, messages) {
     let msg = 'API error ' + res.status;
     try {
       const errJson = JSON.parse(errText);
-      msg += ': ' + (errJson.error?.message || errText.slice(0, 150));
-    } catch { msg += ': ' + errText.slice(0, 150); }
-    if (res.status === 429) msg = 'Rate limit hit. Switch to a different free model.';
-    if (res.status === 401) msg = 'Invalid API key. Create a new one at OpenRouter.';
+      const details = errJson.error?.message || errText.slice(0, 150);
+      if (res.status === 404 && details.includes('No endpoints found')) {
+        msg = 'Model not available. Switch model in ⚙ API Key or use Auto.';
+      } else {
+        msg += ': ' + details;
+      }
+    } catch {
+      msg += ': ' + errText.slice(0, 150);
+    }
+    if (res.status === 429) msg = 'Rate limit hit. Switch model in ⚙ API Key.';
+    if (res.status === 401) msg = 'Invalid API key. Check ⚙ API Key.';
     throw new Error(msg);
   }
-
   const data = await res.json();
   const text = data.choices?.[0]?.message?.content?.trim() || '';
   if (!text) throw new Error('Empty response. Try regen or switch model.');
@@ -1796,7 +1815,7 @@ async function generate() {
   const note = document.getElementById('noteInput').value.trim();
 
   if (!charMsg && !note) {
-    toast('paste {{char}}\'s message and/or write a direction', 'danger');
+    toast('Paste the character message and/or write a direction', 'danger');
     return;
   }
 
@@ -1950,7 +1969,7 @@ function swipeAlt(idx, dir) {
 ======================================================== */
 function exportAll() {
   const data = {
-    version: 4,
+    version: 3,
     exportedAt: new Date().toISOString(),
     persona: state.persona,
     characters: state.characters,
@@ -2055,7 +2074,7 @@ function bind() {
   // settings
   document.getElementById('settingsBtn').addEventListener('click', () => {
     document.getElementById('apiKey').value = state.settings.apiKey || '';
-    document.getElementById('modelSelect').value = state.settings.model || '';
+    document.getElementById('modelSelect').value = state.settings.model;
     document.getElementById('settingsModal').classList.add('show');
     closeDrawers();
   });
@@ -2064,10 +2083,10 @@ function bind() {
   });
   document.getElementById('saveSettings').addEventListener('click', () => {
     state.settings.apiKey = document.getElementById('apiKey').value.trim();
-    state.settings.model = document.getElementById('modelSelect').value.trim();
+    state.settings.model = document.getElementById('modelSelect').value;
     saveSettings();
     document.getElementById('settingsModal').classList.remove('show');
-    toast('API key & model saved', 'success');
+    toast('API key saved', 'success');
     updateWelcomeSteps();
   });
 
