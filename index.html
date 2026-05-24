@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0908">
+<title>persona — {{user}} co-writer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0908;
+    --bg-elev: #131210;
+    --bg-elev-2: #1c1a17;
+    --bg-elev-3: #252220;
+    --line: #2a2724;
+    --line-bright: #3a3733;
+    --ink: #ebe6df;
+    --ink-dim: #9a948b;
+    --ink-faint: #5c574f;
+    --accent: #d4a574;
+    --accent-warm: #e8b986;
+    --rose: #c97b6a;
+    --moss: #7a8f6b;
+    --danger: #b85450;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at top left, rgba(212, 165, 116, 0.04), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(201, 123, 106, 0.03), transparent 50%);
+  }
+
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    position: relative;
+  }
+
+  /* ====== TOPBAR ====== */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .menu-btn {
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    color: var(--ink);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .menu-btn:active { background: var(--bg-elev-2); }
+
+  .topbar-center { flex: 1; min-width: 0; text-align: center; }
+
+  .topbar-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+
+  .topbar-title em { font-style: italic; color: var(--accent); }
+
+  .topbar-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ====== CHAT AREA ====== */
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .empty-state .ornament {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    color: var(--accent);
+    opacity: 0.3;
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+
+  .empty-state h2 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 21px;
+    color: var(--ink-dim);
+    margin-bottom: 10px;
+  }
+
+  .empty-state p {
+    max-width: 320px;
+    line-height: 1.65;
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+
+  .empty-state .hint {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 8px 14px;
+    border: 1px dashed var(--line-bright);
+    border-radius: 4px;
+  }
+
+  /* ====== MESSAGE PAIR ====== */
+  .turn {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .turn-section {
+    padding: 12px 14px;
+  }
+
+  .turn-section + .turn-section {
+    border-top: 1px solid var(--line);
+  }
+
+  .turn-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .turn-label .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .turn-label.char { color: var(--moss); }
+  .turn-label.char .dot { background: var(--moss); }
+  .turn-label.note { color: var(--rose); }
+  .turn-label.note .dot { background: var(--rose); }
+  .turn-label.user { color: var(--accent); }
+  .turn-label.user .dot { background: var(--accent); }
+  .turn-label .line { flex: 1; height: 1px; background: var(--line); }
+
+  .turn-body {
+    font-family: 'Fraunces', serif;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .turn-body.dim {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+  }
+
+  .turn-body em, .turn-body i { color: var(--ink-dim); font-style: italic; }
+
+  .turn-section.user-reply {
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.05), transparent);
+    border-left: 3px solid var(--accent);
+  }
+
+  .turn-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .msg-btn {
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    color: var(--ink-dim);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .msg-btn:active, .msg-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .msg-btn.primary {
+    font-weight: 600;
+  }
+
+  .swipe-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  .swipe-btn {
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    color: var(--ink-dim);
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .swipe-btn:disabled { opacity: 0.3; }
+
+  .edit-area {
+    width: 100%;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 15.5px;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+  }
+
+  /* ====== INPUT BAR ====== */
+  .input-bar {
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    padding: 12px 14px;
+    flex-shrink: 0;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-block {
+    background: var(--bg-elev);
+    border: 1px solid var(--line-bright);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .input-block:focus-within { border-color: var(--accent); }
+
+  .input-block-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .input-block-label .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .input-block.char .input-block-label { color: var(--moss); }
+  .input-block.char .input-block-label .dot { background: var(--moss); }
+  .input-block.note .input-block-label { color: var(--rose); }
+  .input-block.note .input-block-label .dot { background: var(--rose); }
+
+  .input-block textarea {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    resize: none;
+    min-height: 20px;
+    max-height: 140px;
+    width: 100%;
+  }
+
+  .input-block.char textarea {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+  }
+
+  .input-block textarea::placeholder { color: var(--ink-faint); font-style: italic; }
+
+  .input-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .input-options {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    background: var(--bg-elev);
+    border: 1px solid var(--line-bright);
+    color: var(--ink-dim);
+    padding: 6px 11px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .pill.nsfw.active { background: var(--rose); border-color: var(--rose); }
+
+  .send-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 38px;
+  }
+
+  .send-btn:active { background: var(--accent-warm); }
+  .send-btn:disabled { opacity: 0.4; }
+
+  /* ====== DRAWERS ====== */
+  .drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background: var(--bg-elev);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    width: 88vw;
+    max-width: 340px;
+  }
+
+  .drawer.left { left: 0; border-right: 1px solid var(--line); transform: translateX(-100%); }
+  .drawer.right { right: 0; border-left: 1px solid var(--line); transform: translateX(100%); width: 92vw; max-width: 380px; }
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .drawer-backdrop.show { opacity: 1; pointer-events: auto; }
+
+  .drawer-header {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .drawer-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+  }
+
+  .drawer-title::before {
+    content: '✦';
+    color: var(--accent);
+    margin-right: 6px;
+    font-size: 12px;
+    font-style: normal;
+    vertical-align: middle;
+  }
+
+  .drawer-close {
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    color: var(--ink-dim);
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .sidebar-section {
+    padding: 14px 18px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .new-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--bg);
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  .char-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 12px 12px;
+  }
+
+  .char-item {
+    padding: 12px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 3px;
+    border: 1px solid transparent;
+    position: relative;
+  }
+
+  .char-item.active {
+    background: var(--bg-elev-2);
+    border-color: var(--line-bright);
+  }
+
+  .char-item.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .char-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    padding-right: 24px;
+  }
+
+  .char-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+  }
+
+  .nsfw-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    background: var(--rose);
+    color: var(--bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  .char-delete {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 6px;
+    font-size: 12px;
+  }
+  .char-delete:active { color: var(--danger); }
+
+  .drawer-footer {
+    padding: 14px 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .footer-btn {
+    flex: 1;
+    min-width: 80px;
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    color: var(--ink-dim);
+    padding: 9px 10px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+  }
+
+  .panel-section { margin-bottom: 24px; }
+
+  .panel-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .panel-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+
+  .field { margin-bottom: 12px; }
+
+  .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line-bright);
+    border-radius: 5px;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239a948b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 72px; font-family: 'Fraunces', serif; line-height: 1.55; }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .field-hint a { color: var(--accent); text-decoration: underline; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 22px 0;
+    position: relative;
+  }
+
+  .divider::after {
+    content: '✦';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-elev);
+    padding: 0 10px;
+    color: var(--accent);
+    font-size: 10px;
+    opacity: 0.5;
+  }
+
+  .save-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-top: 3px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-status.show { opacity: 1; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+  }
+
+  .checkbox-row input { width: auto; }
+  .checkbox-row label { font-size: 12px; color: var(--ink-dim); cursor: pointer; flex: 1; }
+
+  /* ====== MODALS ====== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 9, 8, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.show { display: flex; }
+
+  .modal {
+    background: var(--bg-elev);
+    border: 1px solid var(--line-bright);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 460px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+
+  .modal h2 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 5px;
+    color: var(--ink);
+  }
+
+  .modal-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    justify-content: flex-end;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink-dim);
+    border: 1px solid var(--line-bright);
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .loader {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .loader .dot-anim {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--bg);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  .loader .dot-anim:nth-child(2) { animation-delay: 0.2s; }
+  .loader .dot-anim:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bg-elev-3);
+    color: var(--ink);
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--line-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    max-width: 88vw;
+    text-align: center;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.danger { border-color: var(--danger); color: var(--danger); }
+  .toast.success { border-color: var(--moss); color: var(--moss); }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--line-bright); border-radius: 3px; }
+
+  /* desktop */
+  @media (min-width: 900px) {
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+    }
+    .topbar { grid-column: 2; }
+    .chat-area { grid-column: 2; padding: 24px 32px 18px; gap: 18px; }
+    .input-bar { grid-column: 2; padding: 14px 32px 18px; }
+    .menu-btn { display: none; }
+    .drawer {
+      position: relative;
+      transform: none !important;
+      box-shadow: none;
+      width: auto;
+      max-width: none;
+    }
+    .drawer.left { grid-column: 1; grid-row: 1 / -1; }
+    .drawer.right { grid-column: 3; grid-row: 1 / -1; }
+    .drawer-close { display: none; }
+    .drawer-backdrop { display: none !important; }
+    .topbar-center { text-align: left; }
+    .topbar { padding: 18px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ==== LEFT DRAWER ==== -->
+  <aside class="drawer left" id="leftDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">persona</div>
+      <button class="drawer-close" data-close="left">✕</button>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="section-label">Characters</span>
+      <button class="new-btn" id="newCharBtn">+</button>
+    </div>
+
+    <div class="char-list" id="charList"></div>
+
+    <div class="drawer-footer">
+      <button class="footer-btn" id="settingsBtn">⚙ API</button>
+      <button class="footer-btn" id="exportBtn">Export</button>
+      <button class="footer-btn" id="importBtn">Import</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+    </div>
+  </aside>
+
+  <!-- ==== TOPBAR ==== -->
+  <header class="topbar">
+    <button class="menu-btn" data-open="left">☰</button>
+    <div class="topbar-center">
+      <div class="topbar-title" id="headerTitle">no character <em>selected</em></div>
+      <div class="topbar-sub" id="scenarioHint">tap menu → create one</div>
+    </div>
+    <button class="menu-btn" data-open="right">⚙</button>
+  </header>
+
+  <!-- ==== CHAT AREA ==== -->
+  <div class="chat-area" id="chatArea">
+    <div class="empty-state" id="emptyState">
+      <div class="ornament">‹ ✦ ›</div>
+      <h2>your co-writer awaits</h2>
+      <p>Paste what {{char}} just said, write a quick direction for what you want {{user}} to do — get a fully written reply back to copy into your roleplay app.</p>
+      <div class="hint">tap ☰ → set up your persona first</div>
+    </div>
+  </div>
+
+  <!-- ==== INPUT BAR ==== -->
+  <div class="input-bar" id="inputBar" style="display:none">
+    <div class="input-block char">
+      <div class="input-block-label">
+        <span class="dot"></span>
+        <span>{{char}}'s message</span>
+      </div>
+      <textarea id="charInput" placeholder="Paste what {{char}} just said in your roleplay..." rows="2"></textarea>
+    </div>
+
+    <div class="input-block note">
+      <div class="input-block-label">
+        <span class="dot"></span>
+        <span>my direction for {{user}}</span>
+      </div>
+      <textarea id="noteInput" placeholder="What should {{user}} do or say? e.g. 'flirt but stay cautious', 'kiss them', 'push them away angrily'..." rows="2"></textarea>
+    </div>
+
+    <div class="input-controls">
+      <div class="input-options">
+        <button class="pill" data-length="short">short</button>
+        <button class="pill active" data-length="medium">med</button>
+        <button class="pill" data-length="long">long</button>
+        <button class="pill nsfw" id="nsfwToggle">NSFW</button>
+      </div>
+      <button class="send-btn" id="generateBtn">
+        <span id="generateLabel">Generate →</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==== RIGHT DRAWER ==== -->
+  <aside class="drawer right" id="rightDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">settings</div>
+      <button class="drawer-close" data-close="right">✕</button>
+    </div>
+
+    <div class="panel-body">
+      <div class="panel-section">
+        <div class="panel-title">My Persona</div>
+        <div class="panel-subtitle">how {{user}} is written</div>
+
+        <div class="field">
+          <label class="field-label">Name</label>
+          <input type="text" id="userName" placeholder="e.g. Mira">
+        </div>
+        <div class="field">
+          <label class="field-label">Appearance</label>
+          <textarea id="userAppearance" placeholder="short black hair, gold eyes, scar across the left brow, petite build..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Dress / Outfit</label>
+          <textarea id="userDress" placeholder="black leather jacket, ripped jeans, silver rings on every finger..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Personality</label>
+          <textarea id="userPersonality" placeholder="dry humor, slow to trust, fiercely loyal once she opens up. Speaks bluntly. Hates being touched without permission..."></textarea>
+        </div>
+        <div class="save-status" id="personaSaveStatus">✓ saved</div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="panel-section" id="charPanel" style="display:none">
+        <div class="panel-title" id="activeCharTitle">Active Character</div>
+        <div class="panel-subtitle">scenario context</div>
+
+        <div class="field">
+          <label class="field-label">Character Name</label>
+          <input type="text" id="charName" placeholder="e.g. Kaelen">
+        </div>
+        <div class="field">
+          <label class="field-label">Scenario / Setup (optional)</label>
+          <textarea id="charScenario" placeholder="Who they are, where you met, what's happening..." style="min-height:100px"></textarea>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="charNsfw">
+          <label for="charNsfw">Allow NSFW for this character</label>
+        </div>
+        <div class="save-status" id="charSaveStatus">✓ saved</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+</div>
+
+<!-- ==== NEW CHAR MODAL ==== -->
+<div class="modal-backdrop" id="newCharModal">
+  <div class="modal">
+    <h2>new character</h2>
+    <div class="modal-sub">✦ a new chat room</div>
+    <div class="field">
+      <label class="field-label">Character Name</label>
+      <input type="text" id="newCharName" placeholder="e.g. Kaelen the Witch-King">
+    </div>
+    <div class="field">
+      <label class="field-label">Scenario (optional)</label>
+      <textarea id="newCharScenario" placeholder="Brief description — can be filled in later" style="min-height:100px"></textarea>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="newCharNsfw">
+      <label for="newCharNsfw">Allow NSFW content for this character</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="cancelNewChar">Cancel</button>
+      <button class="btn-primary" id="confirmNewChar">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==== SETTINGS MODAL ==== -->
+<div class="modal-backdrop" id="settingsModal">
+  <div class="modal">
+    <h2>api setup</h2>
+    <div class="modal-sub">✦ openrouter — free models</div>
+
+    <div class="field">
+      <label class="field-label">OpenRouter API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-or-v1-...">
+      <div class="field-hint">
+        Get yours at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>. Stored only in your browser.
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Model</label>
+      <select id="modelSelect">
+        <optgroup label="✦ Best for roleplay (free)">
+          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 — best for creative/NSFW</option>
+          <option value="deepseek/deepseek-r1:free">DeepSeek R1 — strong reasoning</option>
+          <option value="meta-llama/llama-4-maverick:free">Llama 4 Maverick</option>
+        </optgroup>
+        <optgroup label="Other free models">
+          <option value="qwen/qwen3-235b-a22b:free">Qwen3 235B</option>
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B</option>
+          <option value="google/gemma-3-27b-it:free">Gemma 3 27B</option>
+          <option value="mistralai/mistral-small-3.2-24b-instruct:free">Mistral Small 3.2</option>
+        </optgroup>
+      </select>
+      <div class="field-hint">
+        Free tier: ~50 requests/day per model. If one hits its limit, switch.
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" id="cancelSettings">Cancel</button>
+      <button class="btn-primary" id="saveSettings">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========================================================
+   STATE
+======================================================== */
+const STORAGE = {
+  PERSONA: 'persona_user_v2',
+  CHARS: 'persona_chars_v2',
+  SETTINGS: 'persona_settings_v2',
+  ACTIVE: 'persona_active_v2',
+};
+
+let state = {
+  persona: { name: '', appearance: '', dress: '', personality: '' },
+  characters: {},
+  settings: { apiKey: '', model: 'deepseek/deepseek-chat-v3-0324:free' },
+  activeId: null,
+  length: 'medium',
+  nsfwSession: false,
+};
+
+function load() {
+  try {
+    const p = localStorage.getItem(STORAGE.PERSONA);
+    if (p) state.persona = { ...state.persona, ...JSON.parse(p) };
+    const c = localStorage.getItem(STORAGE.CHARS);
+    if (c) state.characters = JSON.parse(c);
+    const s = localStorage.getItem(STORAGE.SETTINGS);
+    if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+    const a = localStorage.getItem(STORAGE.ACTIVE);
+    if (a) state.activeId = a;
+  } catch (e) { console.error('load err', e); }
+}
+
+const savePersona = () => localStorage.setItem(STORAGE.PERSONA, JSON.stringify(state.persona));
+const saveChars = () => localStorage.setItem(STORAGE.CHARS, JSON.stringify(state.characters));
+const saveSettings = () => localStorage.setItem(STORAGE.SETTINGS, JSON.stringify(state.settings));
+const saveActive = () => state.activeId ? localStorage.setItem(STORAGE.ACTIVE, state.activeId) : localStorage.removeItem(STORAGE.ACTIVE);
+
+const uid = () => 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => { t.className = 'toast ' + type; }, 2600);
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function formatBody(text) {
+  let safe = escapeHtml(text);
+  safe = safe.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+  return safe;
+}
+
+function timeAgo(ts) {
+  if (!ts) return 'new';
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h';
+  const d = Math.floor(h / 24);
+  if (d < 7) return d + 'd';
+  return new Date(ts).toLocaleDateString();
+}
+
+/* ========================================================
+   DRAWERS
+======================================================== */
+function openDrawer(side) {
+  document.getElementById(side === 'left' ? 'leftDrawer' : 'rightDrawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('show');
+}
+
+function closeDrawers() {
+  document.getElementById('leftDrawer').classList.remove('open');
+  document.getElementById('rightDrawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('show');
+}
+
+/* ========================================================
+   RENDER
+======================================================== */
+function renderSidebar() {
+  const list = document.getElementById('charList');
+  const chars = Object.values(state.characters).sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
+  if (chars.length === 0) {
+    list.innerHTML = `<div style="padding:24px 14px; color:var(--ink-faint); font-size:12px; text-align:center; line-height:1.6;">
+      <div style="font-family:'Fraunces',serif; font-style:italic; font-size:14px; margin-bottom:6px;">no one here yet</div>
+      tap <strong style="color:var(--accent)">+</strong> to add a character
+    </div>`;
+    return;
+  }
+  list.innerHTML = chars.map(c => {
+    const turnCount = c.turns?.length || 0;
+    return `
+      <div class="char-item ${c.id === state.activeId ? 'active' : ''}" data-id="${c.id}">
+        <div class="char-name">
+          <span>${escapeHtml(c.name || 'untitled')}</span>
+          ${c.nsfw ? '<span class="nsfw-tag">18+</span>' : ''}
+        </div>
+        <div class="char-meta">${turnCount} turns · ${timeAgo(c.lastActive || c.createdAt)}</div>
+        <button class="char-delete" data-del="${c.id}">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderMain() {
+  const empty = document.getElementById('emptyState');
+  const inputBar = document.getElementById('inputBar');
+  const chatArea = document.getElementById('chatArea');
+  const charPanel = document.getElementById('charPanel');
+  const headerTitle = document.getElementById('headerTitle');
+  const scenarioHint = document.getElementById('scenarioHint');
+
+  const ch = state.activeId ? state.characters[state.activeId] : null;
+
+  if (!ch) {
+    empty.style.display = 'flex';
+    inputBar.style.display = 'none';
+    charPanel.style.display = 'none';
+    headerTitle.innerHTML = 'no character <em>selected</em>';
+    scenarioHint.textContent = 'tap menu → create one';
+    [...chatArea.querySelectorAll('.turn')].forEach(m => m.remove());
+    return;
+  }
+
+  empty.style.display = 'none';
+  inputBar.style.display = 'flex';
+  charPanel.style.display = 'block';
+  headerTitle.innerHTML = `<em>${escapeHtml(ch.name || 'untitled')}</em>`;
+  scenarioHint.textContent = (ch.turns && ch.turns.length > 0) ? `✦ ${ch.turns.length} turns` : '✦ first message awaits';
+
+  document.getElementById('charName').value = ch.name || '';
+  document.getElementById('charScenario').value = ch.scenario || '';
+  document.getElementById('charNsfw').checked = !!ch.nsfw;
+  document.getElementById('activeCharTitle').textContent = ch.name || 'Active Character';
+
+  renderTurns();
+}
+
+function renderTurns() {
+  const ch = state.characters[state.activeId];
+  const area = document.getElementById('chatArea');
+  [...area.querySelectorAll('.turn')].forEach(m => m.remove());
+  if (!ch) return;
+
+  (ch.turns || []).forEach((turn, idx) => {
+    const hasAlts = turn.alternatives && turn.alternatives.length > 1;
+    const curAlt = turn.activeAlt ?? 0;
+    const userReply = hasAlts ? turn.alternatives[curAlt] : turn.userReply;
+
+    const el = document.createElement('div');
+    el.className = 'turn';
+
+    let html = '';
+
+    // {{char}}'s message
+    if (turn.charMsg) {
+      html += `
+        <div class="turn-section">
+          <div class="turn-label char">
+            <span class="dot"></span>
+            <span>${escapeHtml(ch.name)} said</span>
+            <span class="line"></span>
+          </div>
+          <div class="turn-body">${formatBody(turn.charMsg)}</div>
+        </div>
+      `;
+    }
+
+    // my direction
+    if (turn.note) {
+      html += `
+        <div class="turn-section">
+          <div class="turn-label note">
+            <span class="dot"></span>
+            <span>my direction</span>
+            <span class="line"></span>
+          </div>
+          <div class="turn-body dim">${escapeHtml(turn.note)}</div>
+        </div>
+      `;
+    }
+
+    // {{user}}'s reply
+    html += `
+      <div class="turn-section user-reply">
+        <div class="turn-label user">
+          <span class="dot"></span>
+          <span>${escapeHtml(state.persona.name || '{{user}}')} replied</span>
+          ${hasAlts ? `
+            <span class="swipe-nav">
+              <button class="swipe-btn" data-swipe="${idx}" data-dir="-1" ${curAlt === 0 ? 'disabled' : ''}>‹</button>
+              <span>${curAlt + 1}/${turn.alternatives.length}</span>
+              <button class="swipe-btn" data-swipe="${idx}" data-dir="1" ${curAlt === turn.alternatives.length - 1 ? 'disabled' : ''}>›</button>
+            </span>
+          ` : '<span class="line"></span>'}
+        </div>
+        <div class="turn-body" data-turn-body="${idx}">${formatBody(userReply || '')}</div>
+        <div class="turn-actions">
+          <button class="msg-btn primary" data-copy="${idx}">📋 copy</button>
+          <button class="msg-btn" data-regen="${idx}">↻ regen</button>
+          <button class="msg-btn" data-edit="${idx}">✎ edit</button>
+          <button class="msg-btn" data-del-turn="${idx}">✕ delete</button>
+        </div>
+      </div>
+    `;
+
+    el.innerHTML = html;
+    area.appendChild(el);
+  });
+
+  area.scrollTop = area.scrollHeight;
+}
+
+function renderAll() {
+  renderSidebar();
+  renderMain();
+  document.getElementById('userName').value = state.persona.name || '';
+  document.getElementById('userAppearance').value = state.persona.appearance || '';
+  document.getElementById('userDress').value = state.persona.dress || '';
+  document.getElementById('userPersonality').value = state.persona.personality || '';
+}
+
+/* ========================================================
+   CHAR ACTIONS
+======================================================== */
+function selectChar(id) {
+  state.activeId = id;
+  saveActive();
+  renderSidebar();
+  renderMain();
+  closeDrawers();
+}
+
+function createChar(name, scenario, nsfw) {
+  const id = uid();
+  state.characters[id] = { id, name, scenario, nsfw, turns: [], createdAt: Date.now(), lastActive: Date.now() };
+  saveChars();
+  selectChar(id);
+  state.nsfwSession = nsfw;
+  updateNsfwToggle();
+}
+
+function deleteChar(id) {
+  if (!confirm('Delete this character and all chat history?')) return;
+  delete state.characters[id];
+  if (state.activeId === id) state.activeId = null;
+  saveChars();
+  saveActive();
+  renderSidebar();
+  renderMain();
+  toast('character deleted', 'danger');
+}
+
+/* ========================================================
+   PROMPT BUILDING
+======================================================== */
+function buildSystemPrompt() {
+  const ch = state.characters[state.activeId];
+  const p = state.persona;
+  const nsfwAllowed = ch.nsfw && state.nsfwSession;
+
+  let lengthGuide = '';
+  if (state.length === 'short') lengthGuide = 'Keep it short: 1-2 sentences. A reaction, a line of dialogue, maybe one small action.';
+  else if (state.length === 'medium') lengthGuide = 'Medium length: one solid paragraph. Mix dialogue with a beat of action or internal thought.';
+  else lengthGuide = 'Long form: multiple paragraphs. Interweave dialogue, physical actions (in *italics*), sensory detail, and internal reactions.';
+
+  return `You are a creative writing co-author helping a roleplayer craft {{user}}'s next reply in their ongoing roleplay with {{char}}. You write IN-CHARACTER as {{user}}, NEVER as {{char}}, NEVER as a narrator outside {{user}}'s POV.
+
+═══ {{user}} — the character you write AS ═══
+Name: ${p.name || '(unnamed — refer to as "I")'}
+Appearance: ${p.appearance || '(not specified)'}
+Dress / Outfit: ${p.dress || '(not specified)'}
+Personality: ${p.personality || '(not specified)'}
+
+═══ {{char}} — who {{user}} is responding to ═══
+Name: ${ch.name}
+${ch.scenario ? 'Context: ' + ch.scenario : ''}
+
+═══ HOW TO WRITE ═══
+- Write {{user}}'s response in FIRST PERSON ("I", "me", "my").
+- Stay true to {{user}}'s personality and appearance. Reference their look/outfit naturally when fitting.
+- Follow the writer's direction for THIS turn — it tells you the emotional beat or action {{user}} should take.
+- Use *asterisks* for physical actions, gestures, and internal thoughts. Plain text for spoken dialogue.
+- ${lengthGuide}
+- React specifically to what {{char}} just said — no generic filler.
+- NEVER write {{char}}'s response, dialogue, or actions. ONLY {{user}}.
+- NEVER add meta commentary, OOC notes, narrator notes, or preambles like "Here's a response:". Output ONLY the in-character reply.
+${nsfwAllowed ? '- NSFW content is permitted in this scene. Write maturely in service of the story, with sensory detail.' : '- Keep it SFW.'}
+
+Output {{user}}'s response and nothing else.`;
+}
+
+function buildMessages(currentCharMsg, currentNote) {
+  const ch = state.characters[state.activeId];
+  const msgs = [];
+
+  // history: each prior turn becomes user(char msg + note) → assistant(user reply)
+  for (const turn of ch.turns) {
+    const reply = turn.alternatives ? turn.alternatives[turn.activeAlt ?? 0] : turn.userReply;
+    let userBlock = '';
+    if (turn.charMsg) userBlock += `[{{char}} ${ch.name}]:\n${turn.charMsg}`;
+    if (turn.note) userBlock += (userBlock ? '\n\n' : '') + `[Direction for {{user}}: ${turn.note}]`;
+    if (!userBlock) userBlock = '(continue)';
+    msgs.push({ role: 'user', content: userBlock });
+    msgs.push({ role: 'assistant', content: reply || '' });
+  }
+
+  // current turn
+  let curBlock = '';
+  if (currentCharMsg) curBlock += `[{{char}} ${ch.name}]:\n${currentCharMsg}`;
+  if (currentNote) curBlock += (curBlock ? '\n\n' : '') + `[Direction for {{user}}: ${currentNote}]`;
+  if (!curBlock) curBlock = '(continue the scene)';
+  msgs.push({ role: 'user', content: curBlock });
+
+  return msgs;
+}
+
+/* ========================================================
+   API CALL
+======================================================== */
+async function callOpenRouter(systemPrompt, messages) {
+  if (!state.settings.apiKey) {
+    throw new Error('No API key. Tap menu → ⚙ API');
+  }
+
+  const fullMessages = [
+    { role: 'system', content: systemPrompt },
+    ...messages,
+  ];
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + state.settings.apiKey,
+      'HTTP-Referer': window.location.origin || 'https://persona.local',
+      'X-Title': 'Persona',
+    },
+    body: JSON.stringify({
+      model: state.settings.model,
+      messages: fullMessages,
+      max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
+      temperature: 0.9,
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    let msg = 'API error ' + res.status;
+    try {
+      const errJson = JSON.parse(errText);
+      msg += ': ' + (errJson.error?.message || errText.slice(0, 150));
+    } catch { msg += ': ' + errText.slice(0, 150); }
+    if (res.status === 429) msg = 'Rate limit hit. Switch model in ⚙ API.';
+    if (res.status === 401) msg = 'Invalid API key. Check ⚙ API.';
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content?.trim() || '';
+  if (!text) throw new Error('Empty response — try again or switch model.');
+  return text;
+}
+
+/* ========================================================
+   GENERATE
+======================================================== */
+async function generate() {
+  const ch = state.characters[state.activeId];
+  if (!ch) return;
+
+  const charMsg = document.getElementById('charInput').value.trim();
+  const note = document.getElementById('noteInput').value.trim();
+
+  if (!charMsg && !note) {
+    toast('paste {{char}}\'s message and/or write a direction', 'danger');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const lbl = document.getElementById('generateLabel');
+  btn.disabled = true;
+  lbl.innerHTML = '<span class="loader"><span class="dot-anim"></span><span class="dot-anim"></span><span class="dot-anim"></span></span>';
+
+  // add pending turn
+  const pendingTurn = {
+    charMsg,
+    note,
+    userReply: '...',
+    ts: Date.now(),
+    pending: true,
+  };
+  ch.turns.push(pendingTurn);
+  ch.lastActive = Date.now();
+  renderTurns();
+
+  try {
+    const sys = buildSystemPrompt();
+    const msgs = buildMessages(charMsg, note);
+    const reply = await callOpenRouter(sys, msgs);
+
+    // replace pending with real
+    ch.turns.pop();
+    ch.turns.push({
+      charMsg,
+      note,
+      alternatives: [reply],
+      activeAlt: 0,
+      ts: Date.now(),
+    });
+    saveChars();
+    renderSidebar();
+    renderTurns();
+
+    // clear inputs
+    document.getElementById('charInput').value = '';
+    document.getElementById('noteInput').value = '';
+    autoResize(document.getElementById('charInput'));
+    autoResize(document.getElementById('noteInput'));
+  } catch (e) {
+    ch.turns.pop();
+    renderTurns();
+    toast(e.message || 'something went wrong', 'danger');
+  } finally {
+    btn.disabled = false;
+    lbl.textContent = 'Generate →';
+  }
+}
+
+async function regenerate(idx) {
+  const ch = state.characters[state.activeId];
+  const turn = ch.turns[idx];
+  if (!turn) return;
+
+  // build history up to (but not including) this turn
+  const originalTurns = ch.turns;
+  ch.turns = ch.turns.slice(0, idx);
+
+  const btn = document.querySelector(`[data-regen="${idx}"]`);
+  if (btn) btn.textContent = '...';
+
+  try {
+    const sys = buildSystemPrompt();
+    const msgs = buildMessages(turn.charMsg, turn.note);
+    const reply = await callOpenRouter(sys, msgs);
+
+    ch.turns = originalTurns;
+    if (!turn.alternatives) turn.alternatives = [turn.userReply || ''];
+    turn.alternatives.push(reply);
+    turn.activeAlt = turn.alternatives.length - 1;
+    delete turn.userReply;
+    saveChars();
+    renderTurns();
+  } catch (e) {
+    ch.turns = originalTurns;
+    renderTurns();
+    toast(e.message || 'regen failed', 'danger');
+  }
+}
+
+/* ========================================================
+   INTERACTIONS
+======================================================== */
+function copyTurn(idx) {
+  const ch = state.characters[state.activeId];
+  const turn = ch.turns[idx];
+  const text = turn.alternatives ? turn.alternatives[turn.activeAlt ?? 0] : turn.userReply;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => toast('copied to clipboard', 'success'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('copied', 'success');
+  }
+}
+
+function deleteTurn(idx) {
+  if (!confirm('Delete this turn?')) return;
+  const ch = state.characters[state.activeId];
+  ch.turns.splice(idx, 1);
+  saveChars();
+  renderTurns();
+  renderSidebar();
+}
+
+function editTurn(idx) {
+  const ch = state.characters[state.activeId];
+  const turn = ch.turns[idx];
+  const cur = turn.alternatives ? turn.alternatives[turn.activeAlt ?? 0] : turn.userReply;
+
+  const bodyEl = document.querySelector(`[data-turn-body="${idx}"]`);
+  if (!bodyEl) return;
+  const ta = document.createElement('textarea');
+  ta.className = 'edit-area';
+  ta.value = cur;
+  bodyEl.replaceWith(ta);
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+
+  const save = () => {
+    const newVal = ta.value.trim();
+    if (turn.alternatives) turn.alternatives[turn.activeAlt ?? 0] = newVal;
+    else turn.userReply = newVal;
+    saveChars();
+    renderTurns();
+  };
+  ta.addEventListener('blur', save);
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Escape') renderTurns();
+  });
+}
+
+function swipeAlt(idx, dir) {
+  const ch = state.characters[state.activeId];
+  const turn = ch.turns[idx];
+  if (!turn.alternatives) return;
+  const next = (turn.activeAlt ?? 0) + dir;
+  if (next < 0 || next >= turn.alternatives.length) return;
+  turn.activeAlt = next;
+  saveChars();
+  renderTurns();
+}
+
+/* ========================================================
+   EXPORT / IMPORT
+======================================================== */
+function exportAll() {
+  const data = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    persona: state.persona,
+    characters: state.characters,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `persona-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('exported', 'success');
+}
+
+function importFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('Import & merge with current data?')) return;
+      if (data.persona) state.persona = { ...state.persona, ...data.persona };
+      if (data.characters) Object.assign(state.characters, data.characters);
+      savePersona();
+      saveChars();
+      renderAll();
+      toast('imported', 'success');
+    } catch (err) {
+      toast('invalid file', 'danger');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ========================================================
+   UTILS
+======================================================== */
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 140) + 'px';
+}
+
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+function updateNsfwToggle() {
+  const btn = document.getElementById('nsfwToggle');
+  if (state.nsfwSession) btn.classList.add('active');
+  else btn.classList.remove('active');
+}
+
+/* ========================================================
+   BIND
+======================================================== */
+function bind() {
+  document.querySelectorAll('[data-open]').forEach(b => {
+    b.addEventListener('click', () => openDrawer(b.dataset.open));
+  });
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', closeDrawers);
+  });
+  document.getElementById('drawerBackdrop').addEventListener('click', closeDrawers);
+
+  document.getElementById('charList').addEventListener('click', e => {
+    const del = e.target.closest('[data-del]');
+    if (del) { e.stopPropagation(); deleteChar(del.dataset.del); return; }
+    const item = e.target.closest('.char-item');
+    if (item) selectChar(item.dataset.id);
+  });
+
+  // new char
+  document.getElementById('newCharBtn').addEventListener('click', () => {
+    document.getElementById('newCharName').value = '';
+    document.getElementById('newCharScenario').value = '';
+    document.getElementById('newCharNsfw').checked = false;
+    document.getElementById('newCharModal').classList.add('show');
+    setTimeout(() => document.getElementById('newCharName').focus(), 50);
+  });
+  document.getElementById('cancelNewChar').addEventListener('click', () => {
+    document.getElementById('newCharModal').classList.remove('show');
+  });
+  document.getElementById('confirmNewChar').addEventListener('click', () => {
+    const name = document.getElementById('newCharName').value.trim();
+    const scenario = document.getElementById('newCharScenario').value.trim();
+    const nsfw = document.getElementById('newCharNsfw').checked;
+    if (!name) { toast('name is required', 'danger'); return; }
+    createChar(name, scenario, nsfw);
+    document.getElementById('newCharModal').classList.remove('show');
+  });
+
+  // settings
+  document.getElementById('settingsBtn').addEventListener('click', () => {
+    document.getElementById('apiKey').value = state.settings.apiKey || '';
+    document.getElementById('modelSelect').value = state.settings.model;
+    document.getElementById('settingsModal').classList.add('show');
+  });
+  document.getElementById('cancelSettings').addEventListener('click', () => {
+    document.getElementById('settingsModal').classList.remove('show');
+  });
+  document.getElementById('saveSettings').addEventListener('click', () => {
+    state.settings.apiKey = document.getElementById('apiKey').value.trim();
+    state.settings.model = document.getElementById('modelSelect').value;
+    saveSettings();
+    document.getElementById('settingsModal').classList.remove('show');
+    toast('settings saved', 'success');
+  });
+
+  // persona auto-save
+  ['userName', 'userAppearance', 'userDress', 'userPersonality'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', debounce(() => {
+      state.persona.name = document.getElementById('userName').value;
+      state.persona.appearance = document.getElementById('userAppearance').value;
+      state.persona.dress = document.getElementById('userDress').value;
+      state.persona.personality = document.getElementById('userPersonality').value;
+      savePersona();
+      const s = document.getElementById('personaSaveStatus');
+      s.classList.add('show');
+      setTimeout(() => s.classList.remove('show'), 1200);
+      renderTurns(); // update {{user}} label if name changed
+    }, 400));
+  });
+
+  // char auto-save
+  ['charName', 'charScenario'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', debounce(() => {
+      const ch = state.characters[state.activeId];
+      if (!ch) return;
+      ch.name = document.getElementById('charName').value;
+      ch.scenario = document.getElementById('charScenario').value;
+      saveChars();
+      renderSidebar();
+      document.getElementById('headerTitle').innerHTML = `<em>${escapeHtml(ch.name || 'untitled')}</em>`;
+      const s = document.getElementById('charSaveStatus');
+      s.classList.add('show');
+      setTimeout(() => s.classList.remove('show'), 1200);
+    }, 400));
+  });
+  document.getElementById('charNsfw').addEventListener('change', () => {
+    const ch = state.characters[state.activeId];
+    if (!ch) return;
+    ch.nsfw = document.getElementById('charNsfw').checked;
+    saveChars();
+    renderSidebar();
+    if (!ch.nsfw) state.nsfwSession = false;
+    updateNsfwToggle();
+  });
+
+  // length pills
+  document.querySelectorAll('[data-length]').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('[data-length]').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      state.length = p.dataset.length;
+    });
+  });
+
+  // nsfw toggle
+  document.getElementById('nsfwToggle').addEventListener('click', () => {
+    const ch = state.characters[state.activeId];
+    if (!ch) return;
+    if (!ch.nsfw) {
+      toast('enable NSFW for this character in ⚙ settings first', 'danger');
+      return;
+    }
+    state.nsfwSession = !state.nsfwSession;
+    updateNsfwToggle();
+  });
+
+  // inputs
+  const charInput = document.getElementById('charInput');
+  const noteInput = document.getElementById('noteInput');
+  charInput.addEventListener('input', () => autoResize(charInput));
+  noteInput.addEventListener('input', () => autoResize(noteInput));
+
+  document.getElementById('generateBtn').addEventListener('click', generate);
+
+  // turn interactions
+  document.getElementById('chatArea').addEventListener('click', e => {
+    const copyEl = e.target.closest('[data-copy]');
+    if (copyEl) return copyTurn(+copyEl.dataset.copy);
+    const regenEl = e.target.closest('[data-regen]');
+    if (regenEl) return regenerate(+regenEl.dataset.regen);
+    const editEl = e.target.closest('[data-edit]');
+    if (editEl) return editTurn(+editEl.dataset.edit);
+    const delEl = e.target.closest('[data-del-turn]');
+    if (delEl) return deleteTurn(+delEl.dataset['delTurn']);
+    const swipeEl = e.target.closest('[data-swipe]');
+    if (swipeEl) return swipeAlt(+swipeEl.dataset.swipe, +swipeEl.dataset.dir);
+  });
+
+  // export/import
+  document.getElementById('exportBtn').addEventListener('click', exportAll);
+  document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e => {
+    if (e.target.files[0]) importFile(e.target.files[0]);
+    e.target.value = '';
+  });
+
+  // modal click-outside
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => {
+      if (e.target === m) m.classList.remove('show');
+    });
+  });
+}
+
+/* ========================================================
+   INIT
+======================================================== */
+load();
+bind();
+renderAll();
+
+if (!state.settings.apiKey) {
+  setTimeout(() => {
+    if (!state.settings.apiKey) document.getElementById('settingsModal').classList.add('show');
+  }, 600);
+}
+</script>
+</body>
+</html>
