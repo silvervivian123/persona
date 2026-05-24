@@ -1403,7 +1403,14 @@ function load() {
     const c = localStorage.getItem(STORAGE.CHARS);
     if (c) state.characters = JSON.parse(c);
     const s = localStorage.getItem(STORAGE.SETTINGS);
-    if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+    if (s) {
+      state.settings = { ...state.settings, ...JSON.parse(s) };
+      const normalizedModel = normalizeModel(state.settings.model);
+      if (normalizedModel !== state.settings.model) {
+        state.settings.model = normalizedModel;
+        saveSettings();
+      }
+    }
     const a = localStorage.getItem(STORAGE.ACTIVE);
     if (a) state.activeId = a;
   } catch (e) { console.error('load err', e); }
@@ -1415,6 +1422,15 @@ const saveSettings = () => localStorage.setItem(STORAGE.SETTINGS, JSON.stringify
 const saveActive = () => state.activeId ? localStorage.setItem(STORAGE.ACTIVE, state.activeId) : localStorage.removeItem(STORAGE.ACTIVE);
 
 const uid = () => 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+function normalizeModel(model) {
+  if (!model) return 'auto';
+  if (model === 'auto') return 'auto';
+  if (model.endsWith('-free') && !model.includes(':free')) {
+    return model.replace(/-free$/, ':free');
+  }
+  return model;
+}
 
 function toast(msg, type = '') {
   const t = document.getElementById('toast');
@@ -1786,6 +1802,29 @@ async function callOpenRouter(systemPrompt, messages) {
     try {
       const errJson = JSON.parse(errText);
       const details = errJson.error?.message || errText.slice(0, 150);
+      if (res.status === 404 && details.includes('No endpoints found') && requestBody.model) {
+        console.warn('OpenRouter model endpoint failure, retrying with Auto mode', requestBody.model);
+        delete requestBody.model;
+        const retryRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + state.settings.apiKey.trim(),
+            'HTTP-Referer': window.location.origin || 'https://persona.local',
+            'X-Title': 'Persona',
+          },
+          body: JSON.stringify(requestBody),
+        });
+        if (retryRes.ok) {
+          const retryData = await retryRes.json();
+          const retryText = retryData.choices?.[0]?.message?.content?.trim() || '';
+          if (!retryText) throw new Error('Empty response. Try regen or switch model.');
+          state.settings.model = 'auto';
+          saveSettings();
+          toast('Model failed; switched to Auto mode', 'danger');
+          return retryText;
+        }
+      }
       if (res.status === 404 && details.includes('No endpoints found')) {
         msg = 'Model not available. Switch model in ⚙ API Key or use Auto.';
       } else {
