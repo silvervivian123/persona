@@ -65,6 +65,10 @@
     background: var(--bg);
     flex-shrink: 0;
     gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    backdrop-filter: blur(20px);
   }
 
   .topbar-btn {
@@ -563,6 +567,18 @@
 
   .send-btn:active { background: var(--accent-warm); }
   .send-btn:disabled { opacity: 0.4; }
+
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid rgba(212, 165, 116, 0.85);
+    outline-offset: 2px;
+  }
+
+  .input-bar {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
 
   /* ================ DRAWERS ================ */
   .drawer {
@@ -1087,6 +1103,21 @@
     .topbar-center { text-align: left; }
     .topbar { padding: 16px 32px; }
   }
+
+  @media (max-width: 640px) {
+    .app { min-height: 100dvh; }
+    .topbar { padding: 12px 14px; gap: 6px; }
+    .topbar-btn { padding: 9px 10px; min-width: 60px; }
+    .chat-area { padding: 18px 12px 10px; }
+    .input-bar { padding: 10px 14px 16px; }
+    .input-options { flex-wrap: wrap; justify-content: space-between; }
+    .input-controls { flex-direction: column; align-items: stretch; }
+    .send-btn { width: 100%; justify-content: center; }
+    .drawer { width: 100vw; max-width: none; }
+    .drawer.right { width: 100vw; }
+    .drawer.left, .drawer.right { top: 0; bottom: 0; }
+    .turn { border-radius: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -1318,7 +1349,7 @@
     <div class="field">
       <label class="field-label">AI Model</label>
       <select id="modelSelect">
-        <option value="auto">Auto — OpenRouter default</option>
+        <option value="openrouter/auto">Auto — OpenRouter default</option>
         <optgroup label="✦ Models miễn phí (Hoạt động tốt)">
           <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B — (Rất thông minh, hợp Roleplay)</option>
           <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash — (Văn phong sáng tạo, tự nhiên)</option>
@@ -1390,7 +1421,7 @@ const STORAGE = {
 let state = {
   persona: { name: '', appearance: '', dress: '', personality: '' },
   characters: {},
-  settings: { apiKey: '', model: 'auto' },
+  settings: { apiKey: '', model: 'openrouter/auto' },
   activeId: null,
   length: 'medium',
   nsfwSession: false,
@@ -1424,8 +1455,8 @@ const saveActive = () => state.activeId ? localStorage.setItem(STORAGE.ACTIVE, s
 const uid = () => 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
 function normalizeModel(model) {
-  if (!model) return 'auto';
-  if (model === 'auto') return 'auto';
+  if (!model) return 'openrouter/auto';
+  if (model === 'auto' || model === 'openrouter/auto') return 'openrouter/auto';
   if (model.endsWith('-free') && !model.includes(':free')) {
     return model.replace(/-free$/, ':free');
   }
@@ -1774,7 +1805,7 @@ async function callOpenRouter(systemPrompt, messages) {
   let res;
   try {
     const requestBody = {
-      model: (state.settings.model && state.settings.model !== 'auto') ? state.settings.model : 'openrouter/auto',
+      model: normalizeModel(state.settings.model),
       messages: fullMessages,
       max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
       temperature: 0.9,
@@ -1817,7 +1848,7 @@ async function callOpenRouter(systemPrompt, messages) {
           const retryData = await retryRes.json();
           const retryText = retryData.choices?.[0]?.message?.content?.trim() || '';
           if (!retryText) throw new Error('Empty response. Try regen or switch model.');
-          state.settings.model = 'auto';
+          state.settings.model = 'openrouter/auto';
           saveSettings();
           toast('Model failed; switched to Auto mode', 'danger');
           return retryText;
@@ -2120,7 +2151,7 @@ function bind() {
   });
   document.getElementById('saveSettings').addEventListener('click', () => {
     state.settings.apiKey = document.getElementById('apiKey').value.trim();
-    state.settings.model = document.getElementById('modelSelect').value;
+    state.settings.model = normalizeModel(document.getElementById('modelSelect').value);
     saveSettings();
     document.getElementById('settingsModal').classList.remove('show');
     toast('API key saved', 'success');
