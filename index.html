@@ -1349,7 +1349,7 @@
     <div class="field">
       <label class="field-label">AI Model</label>
       <select id="modelSelect">
-        <option value="openrouter/auto">Auto — OpenRouter default</option>
+        <option value="auto">Auto — OpenRouter default</option>
         <optgroup label="✦ Models miễn phí (Hoạt động tốt)">
           <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B — (Rất thông minh, hợp Roleplay)</option>
           <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash — (Văn phong sáng tạo, tự nhiên)</option>
@@ -1421,7 +1421,7 @@ const STORAGE = {
 let state = {
   persona: { name: '', appearance: '', dress: '', personality: '' },
   characters: {},
-  settings: { apiKey: '', model: 'openrouter/auto' },
+  settings: { apiKey: '', model: 'auto' },
   activeId: null,
   length: 'medium',
   nsfwSession: false,
@@ -1455,8 +1455,8 @@ const saveActive = () => state.activeId ? localStorage.setItem(STORAGE.ACTIVE, s
 const uid = () => 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
 function normalizeModel(model) {
-  if (!model) return 'openrouter/auto';
-  if (model === 'auto' || model === 'openrouter/auto') return 'openrouter/auto';
+  if (!model) return 'auto';
+  if (model === 'auto' || model === 'openrouter/auto') return 'auto';
   if (model.endsWith('-free') && !model.includes(':free')) {
     return model.replace(/-free$/, ':free');
   }
@@ -1805,11 +1805,13 @@ async function callOpenRouter(systemPrompt, messages) {
   let res;
   try {
     const requestBody = {
-      model: normalizeModel(state.settings.model),
       messages: fullMessages,
       max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
       temperature: 0.9,
     };
+    if (state.settings.model && state.settings.model !== 'auto') {
+      requestBody.model = normalizeModel(state.settings.model);
+    }
 
     res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -1848,7 +1850,7 @@ async function callOpenRouter(systemPrompt, messages) {
           const retryData = await retryRes.json();
           const retryText = retryData.choices?.[0]?.message?.content?.trim() || '';
           if (!retryText) throw new Error('Empty response. Try regen or switch model.');
-          state.settings.model = 'openrouter/auto';
+          state.settings.model = 'auto';
           saveSettings();
           toast('Model failed; switched to Auto mode', 'danger');
           return retryText;
