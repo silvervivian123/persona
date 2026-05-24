@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#0a0908">
-<title>persona — {{user}} co-writer</title>
+<title>persona — roleplay co-writer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a0908;
@@ -43,8 +43,8 @@
 
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
-    opacity: 0.35;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
   }
 
@@ -56,40 +56,43 @@
     position: relative;
   }
 
-  /* ====== TOPBAR ====== */
+  /* ================ TOPBAR ================ */
   .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-bottom: 1px solid var(--line);
     background: var(--bg);
     flex-shrink: 0;
     gap: 8px;
   }
 
-  .menu-btn {
-    background: transparent;
+  .topbar-btn {
+    background: var(--bg-elev);
     border: 1px solid var(--line-bright);
     color: var(--ink);
-    width: 38px;
-    height: 38px;
+    padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 16px;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     flex-shrink: 0;
+    min-height: 38px;
   }
 
-  .menu-btn:active { background: var(--bg-elev-2); }
+  .topbar-btn:active { background: var(--bg-elev-2); }
+  .topbar-btn .icon { font-size: 14px; }
 
-  .topbar-center { flex: 1; min-width: 0; text-align: center; }
+  .topbar-center { flex: 1; min-width: 0; text-align: center; padding: 0 4px; }
 
   .topbar-title {
     font-family: 'Fraunces', serif;
-    font-size: 17px;
+    font-size: 16px;
     color: var(--ink);
     white-space: nowrap;
     overflow: hidden;
@@ -101,14 +104,14 @@
 
   .topbar-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 8.5px;
     color: var(--ink-faint);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-top: 2px;
   }
 
-  /* ====== CHAT AREA ====== */
+  /* ================ CHAT AREA ================ */
   .chat-area {
     flex: 1;
     overflow-y: auto;
@@ -116,10 +119,173 @@
     padding: 18px 14px 14px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
   }
 
-  .empty-state {
+  /* ================ WELCOME ================ */
+  .welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 18px;
+    max-width: 520px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .welcome-hero {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-top: 20px;
+  }
+
+  .welcome-mark {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 42px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .welcome-mark::before {
+    content: '✦';
+    color: var(--accent);
+    font-style: normal;
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .welcome-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .welcome-desc {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--ink-dim);
+    line-height: 1.65;
+    text-align: center;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .step-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .step-card.done {
+    border-color: var(--moss);
+    background: rgba(122, 143, 107, 0.06);
+  }
+
+  .step-card.active {
+    border-color: var(--accent);
+    background: rgba(212, 165, 116, 0.06);
+  }
+
+  .step-card:active { background: var(--bg-elev-2); }
+
+  .step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--line-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .step-card.done .step-num {
+    background: var(--moss);
+    color: var(--bg);
+    border-color: var(--moss);
+  }
+
+  .step-card.active .step-num {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .step-desc {
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+  }
+
+  .step-arrow {
+    color: var(--ink-faint);
+    font-size: 18px;
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .step-card.done .step-arrow { color: var(--moss); }
+
+  .welcome-help {
+    margin-top: 22px;
+    padding: 14px;
+    background: var(--bg-elev);
+    border: 1px dashed var(--line-bright);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .welcome-help-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .welcome-help-text {
+    font-size: 12px;
+    color: var(--ink-dim);
+    line-height: 1.6;
+  }
+
+  /* ================ EMPTY (no chat yet) ================ */
+  .empty-chat {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -130,45 +296,31 @@
     padding: 30px 20px;
   }
 
-  .empty-state .ornament {
+  .empty-chat .ornament {
     font-family: 'Fraunces', serif;
-    font-size: 52px;
+    font-size: 48px;
     color: var(--accent);
     opacity: 0.3;
     font-style: italic;
     margin-bottom: 14px;
-    line-height: 1;
   }
 
-  .empty-state h2 {
+  .empty-chat h2 {
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-weight: 400;
-    font-size: 21px;
+    font-size: 20px;
     color: var(--ink-dim);
     margin-bottom: 10px;
   }
 
-  .empty-state p {
+  .empty-chat p {
     max-width: 320px;
     line-height: 1.65;
     color: var(--ink-faint);
     font-size: 13px;
   }
 
-  .empty-state .hint {
-    margin-top: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding: 8px 14px;
-    border: 1px dashed var(--line-bright);
-    border-radius: 4px;
-  }
-
-  /* ====== MESSAGE PAIR ====== */
+  /* ================ TURN CARDS ================ */
   .turn {
     max-width: 720px;
     width: 100%;
@@ -179,13 +331,8 @@
     overflow: hidden;
   }
 
-  .turn-section {
-    padding: 12px 14px;
-  }
-
-  .turn-section + .turn-section {
-    border-top: 1px solid var(--line);
-  }
+  .turn-section { padding: 12px 14px; }
+  .turn-section + .turn-section { border-top: 1px solid var(--line); }
 
   .turn-label {
     font-family: 'JetBrains Mono', monospace;
@@ -210,7 +357,7 @@
 
   .turn-body {
     font-family: 'Fraunces', serif;
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.7;
     color: var(--ink);
     white-space: pre-wrap;
@@ -228,39 +375,42 @@
   .turn-body em, .turn-body i { color: var(--ink-dim); font-style: italic; }
 
   .turn-section.user-reply {
-    background: linear-gradient(135deg, rgba(212, 165, 116, 0.05), transparent);
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.06), transparent);
     border-left: 3px solid var(--accent);
   }
 
   .turn-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 8px;
+    gap: 6px;
+    margin-top: 10px;
   }
 
   .msg-btn {
     background: transparent;
     border: 1px solid var(--line-bright);
     color: var(--ink-dim);
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 7px 12px;
+    border-radius: 5px;
     cursor: pointer;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  .msg-btn:active, .msg-btn.primary {
+  .msg-btn:active { background: var(--bg-elev-2); }
+  .msg-btn.primary {
     background: var(--accent);
     color: var(--bg);
     border-color: var(--accent);
-  }
-
-  .msg-btn.primary {
     font-weight: 600;
   }
+  .msg-btn.primary:active { background: var(--accent-warm); }
 
   .swipe-nav {
     display: inline-flex;
@@ -295,30 +445,30 @@
     padding: 10px 12px;
     color: var(--ink);
     font-family: 'Fraunces', serif;
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.7;
     resize: vertical;
     min-height: 80px;
     outline: none;
   }
 
-  /* ====== INPUT BAR ====== */
+  /* ================ INPUT BAR ================ */
   .input-bar {
     border-top: 1px solid var(--line);
     background: var(--bg);
-    padding: 12px 14px;
+    padding: 10px 12px;
     flex-shrink: 0;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .input-block {
     background: var(--bg-elev);
     border: 1px solid var(--line-bright);
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 9px 12px;
   }
 
   .input-block:focus-within { border-color: var(--accent); }
@@ -329,7 +479,7 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -348,10 +498,10 @@
     color: var(--ink);
     font-family: 'Inter', sans-serif;
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.5;
     resize: none;
     min-height: 20px;
-    max-height: 140px;
+    max-height: 130px;
     width: 100%;
   }
 
@@ -367,7 +517,6 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    flex-wrap: wrap;
   }
 
   .input-options {
@@ -381,13 +530,14 @@
     background: var(--bg-elev);
     border: 1px solid var(--line-bright);
     color: var(--ink-dim);
-    padding: 6px 11px;
+    padding: 6px 10px;
     border-radius: 14px;
     cursor: pointer;
     font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    min-height: 30px;
   }
 
   .pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
@@ -398,7 +548,7 @@
     color: var(--bg);
     border: none;
     padding: 10px 20px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -408,13 +558,13 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    min-height: 38px;
+    min-height: 40px;
   }
 
   .send-btn:active { background: var(--accent-warm); }
   .send-btn:disabled { opacity: 0.4; }
 
-  /* ====== DRAWERS ====== */
+  /* ================ DRAWERS ================ */
   .drawer {
     position: fixed;
     top: 0;
@@ -446,7 +596,7 @@
   .drawer-backdrop.show { opacity: 1; pointer-events: auto; }
 
   .drawer-header {
-    padding: 18px 18px 14px;
+    padding: 16px 18px 12px;
     border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
@@ -456,7 +606,7 @@
   .drawer-title {
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 20px;
+    font-size: 19px;
     color: var(--ink);
   }
 
@@ -473,15 +623,16 @@
     background: transparent;
     border: 1px solid var(--line-bright);
     color: var(--ink-dim);
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
   }
 
+  /* ================ CHARACTERS LIST ================ */
   .sidebar-section {
-    padding: 14px 18px 6px;
+    padding: 12px 18px 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -499,19 +650,39 @@
     background: var(--accent);
     border: none;
     color: var(--bg);
-    width: 26px;
-    height: 26px;
+    padding: 6px 12px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .char-list {
     flex: 1;
     overflow-y: auto;
     padding: 0 12px 12px;
+  }
+
+  .char-empty {
+    padding: 30px 18px;
+    color: var(--ink-faint);
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .char-empty-line {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--ink-dim);
   }
 
   .char-item {
@@ -521,6 +692,7 @@
     margin-bottom: 3px;
     border: 1px solid transparent;
     position: relative;
+    min-height: 50px;
   }
 
   .char-item.active {
@@ -548,12 +720,13 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2px;
-    padding-right: 24px;
+    padding-right: 30px;
+    gap: 8px;
   }
 
   .char-meta {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--ink-faint);
     letter-spacing: 0.05em;
   }
@@ -567,19 +740,20 @@
     border-radius: 3px;
     letter-spacing: 0.1em;
     font-weight: 600;
+    flex-shrink: 0;
   }
 
   .char-delete {
     position: absolute;
-    right: 10px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: none;
     color: var(--ink-faint);
     cursor: pointer;
-    padding: 6px;
-    font-size: 12px;
+    padding: 8px;
+    font-size: 14px;
   }
   .char-delete:active { color: var(--danger); }
 
@@ -593,26 +767,27 @@
 
   .footer-btn {
     flex: 1;
-    min-width: 80px;
+    min-width: 70px;
     background: transparent;
     border: 1px solid var(--line-bright);
     color: var(--ink-dim);
-    padding: 9px 10px;
+    padding: 10px 8px;
     border-radius: 5px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 9.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     cursor: pointer;
   }
 
+  /* ================ PANEL BODY ================ */
   .panel-body {
     flex: 1;
     overflow-y: auto;
-    padding: 18px;
+    padding: 16px 18px;
   }
 
-  .panel-section { margin-bottom: 24px; }
+  .panel-section { margin-bottom: 22px; }
 
   .panel-title {
     font-family: 'Fraunces', serif;
@@ -631,7 +806,7 @@
     margin-bottom: 14px;
   }
 
-  .field { margin-bottom: 12px; }
+  .field { margin-bottom: 14px; }
 
   .field-label {
     font-family: 'JetBrains Mono', monospace;
@@ -665,13 +840,13 @@
   }
 
   .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
-  .field textarea { resize: vertical; min-height: 72px; font-family: 'Fraunces', serif; line-height: 1.55; }
+  .field textarea { resize: vertical; min-height: 70px; font-family: 'Fraunces', serif; line-height: 1.55; }
 
   .field-hint {
-    font-size: 11px;
+    font-size: 11.5px;
     color: var(--ink-faint);
     margin-top: 5px;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .field-hint a { color: var(--accent); text-decoration: underline; }
@@ -713,16 +888,16 @@
     align-items: center;
     gap: 8px;
     margin-top: 6px;
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: var(--bg);
     border: 1px solid var(--line);
     border-radius: 5px;
   }
 
-  .checkbox-row input { width: auto; }
-  .checkbox-row label { font-size: 12px; color: var(--ink-dim); cursor: pointer; flex: 1; }
+  .checkbox-row input { width: auto; transform: scale(1.2); }
+  .checkbox-row label { font-size: 12.5px; color: var(--ink-dim); cursor: pointer; flex: 1; }
 
-  /* ====== MODALS ====== */
+  /* ================ MODALS ================ */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -732,7 +907,7 @@
     display: none;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 18px;
   }
 
   .modal-backdrop.show { display: flex; }
@@ -741,7 +916,7 @@
     background: var(--bg-elev);
     border: 1px solid var(--line-bright);
     border-radius: 12px;
-    padding: 24px;
+    padding: 22px;
     max-width: 460px;
     width: 100%;
     max-height: 88vh;
@@ -753,7 +928,7 @@
     font-style: italic;
     font-weight: 400;
     font-size: 22px;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     color: var(--ink);
   }
 
@@ -763,7 +938,7 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .modal-actions {
@@ -777,11 +952,11 @@
     background: var(--accent);
     color: var(--bg);
     border: none;
-    padding: 10px 18px;
-    border-radius: 5px;
+    padding: 11px 18px;
+    border-radius: 6px;
     cursor: pointer;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 10.5px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     font-weight: 600;
@@ -791,21 +966,60 @@
     background: transparent;
     color: var(--ink-dim);
     border: 1px solid var(--line-bright);
-    padding: 10px 18px;
-    border-radius: 5px;
+    padding: 11px 18px;
+    border-radius: 6px;
     cursor: pointer;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 10.5px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
 
-  .loader {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
+  /* ================ HELP MODAL ================ */
+  .help-content {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-dim);
   }
 
+  .help-content h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--ink);
+    margin-top: 16px;
+    margin-bottom: 6px;
+  }
+
+  .help-content h3:first-child { margin-top: 0; }
+
+  .help-content p { margin-bottom: 10px; }
+  .help-content code {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  .help-content .step-num-inline {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  .loader { display: inline-flex; gap: 4px; align-items: center; }
   .loader .dot-anim {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--bg);
@@ -821,16 +1035,17 @@
 
   .toast {
     position: fixed;
-    bottom: 100px;
+    bottom: 110px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: var(--bg-elev-3);
     color: var(--ink);
-    padding: 10px 18px;
-    border-radius: 6px;
+    padding: 12px 18px;
+    border-radius: 8px;
     border: 1px solid var(--line-bright);
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
+    line-height: 1.5;
     z-index: 200;
     opacity: 0;
     transition: all 0.3s;
@@ -846,16 +1061,17 @@
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-thumb { background: var(--line-bright); border-radius: 3px; }
 
-  /* desktop */
+  /* ================ DESKTOP ================ */
   @media (min-width: 900px) {
     .app {
       display: grid;
       grid-template-columns: 280px 1fr 340px;
     }
     .topbar { grid-column: 2; }
-    .chat-area { grid-column: 2; padding: 24px 32px 18px; gap: 18px; }
-    .input-bar { grid-column: 2; padding: 14px 32px 18px; }
-    .menu-btn { display: none; }
+    .chat-area { grid-column: 2; padding: 24px 32px 16px; }
+    .input-bar { grid-column: 2; padding: 12px 32px 16px; }
+    .topbar-btn[data-open] { display: none; }
+
     .drawer {
       position: relative;
       transform: none !important;
@@ -867,8 +1083,9 @@
     .drawer.right { grid-column: 3; grid-row: 1 / -1; }
     .drawer-close { display: none; }
     .drawer-backdrop { display: none !important; }
+
     .topbar-center { text-align: left; }
-    .topbar { padding: 18px 32px; }
+    .topbar { padding: 16px 32px; }
   }
 </style>
 </head>
@@ -876,64 +1093,118 @@
 
 <div class="app">
 
-  <!-- ==== LEFT DRAWER ==== -->
+  <!-- ============ LEFT DRAWER ============ -->
   <aside class="drawer left" id="leftDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">persona</div>
+      <div class="drawer-title">Characters</div>
       <button class="drawer-close" data-close="left">✕</button>
     </div>
 
     <div class="sidebar-section">
-      <span class="section-label">Characters</span>
-      <button class="new-btn" id="newCharBtn">+</button>
+      <span class="section-label">your chats</span>
+      <button class="new-btn" id="newCharBtn"><span>+</span> New</button>
     </div>
 
     <div class="char-list" id="charList"></div>
 
     <div class="drawer-footer">
-      <button class="footer-btn" id="settingsBtn">⚙ API</button>
-      <button class="footer-btn" id="exportBtn">Export</button>
-      <button class="footer-btn" id="importBtn">Import</button>
+      <button class="footer-btn" id="settingsBtn">⚙ API Key</button>
+      <button class="footer-btn" id="helpBtn">? Help</button>
+      <button class="footer-btn" id="exportBtn">↓ Backup</button>
+      <button class="footer-btn" id="importBtn">↑ Restore</button>
       <input type="file" id="importFile" accept="application/json" style="display:none">
     </div>
   </aside>
 
-  <!-- ==== TOPBAR ==== -->
+  <!-- ============ TOPBAR ============ -->
   <header class="topbar">
-    <button class="menu-btn" data-open="left">☰</button>
+    <button class="topbar-btn" data-open="left">
+      <span class="icon">☰</span>
+      <span>Chats</span>
+    </button>
     <div class="topbar-center">
-      <div class="topbar-title" id="headerTitle">no character <em>selected</em></div>
-      <div class="topbar-sub" id="scenarioHint">tap menu → create one</div>
+      <div class="topbar-title" id="headerTitle">Welcome</div>
+      <div class="topbar-sub" id="scenarioHint">let's get you set up</div>
     </div>
-    <button class="menu-btn" data-open="right">⚙</button>
+    <button class="topbar-btn" data-open="right">
+      <span class="icon">👤</span>
+      <span>Me</span>
+    </button>
   </header>
 
-  <!-- ==== CHAT AREA ==== -->
+  <!-- ============ CHAT AREA ============ -->
   <div class="chat-area" id="chatArea">
-    <div class="empty-state" id="emptyState">
+
+    <!-- WELCOME (shows on first open or no active char) -->
+    <div class="welcome" id="welcome">
+      <div class="welcome-hero">
+        <div class="welcome-mark">persona</div>
+        <div class="welcome-tag">your roleplay co-writer</div>
+      </div>
+
+      <div class="welcome-desc">
+        Paste what your character said. Add a quick note about what you want to say back. Get a fully-written reply to copy into Crushon.AI.
+      </div>
+
+      <div class="step-list">
+        <div class="step-card" id="stepApi" data-action="api">
+          <div class="step-num" id="stepApiNum">1</div>
+          <div class="step-content">
+            <div class="step-title">Add your API key</div>
+            <div class="step-desc">Free key from OpenRouter — connects the AI that writes for you.</div>
+          </div>
+          <div class="step-arrow">→</div>
+        </div>
+
+        <div class="step-card" id="stepProfile" data-action="profile">
+          <div class="step-num" id="stepProfileNum">2</div>
+          <div class="step-content">
+            <div class="step-title">Set up your {{user}} profile</div>
+            <div class="step-desc">Your name, appearance, outfit, personality — so replies sound like you.</div>
+          </div>
+          <div class="step-arrow">→</div>
+        </div>
+
+        <div class="step-card" id="stepChar" data-action="char">
+          <div class="step-num" id="stepCharNum">3</div>
+          <div class="step-content">
+            <div class="step-title">Create your first character</div>
+            <div class="step-desc">Add a character you're roleplaying with — name and scenario.</div>
+          </div>
+          <div class="step-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="welcome-help">
+        <div class="welcome-help-title">✦ first time using this?</div>
+        <div class="welcome-help-text">Tap <strong style="color:var(--accent)">? Help</strong> in the Characters drawer (☰ Chats) anytime for a full walkthrough.</div>
+      </div>
+    </div>
+
+    <!-- empty chat state (when char exists but no turns yet) -->
+    <div class="empty-chat" id="emptyChat" style="display:none">
       <div class="ornament">‹ ✦ ›</div>
-      <h2>your co-writer awaits</h2>
-      <p>Paste what {{char}} just said, write a quick direction for what you want {{user}} to do — get a fully written reply back to copy into your roleplay app.</p>
-      <div class="hint">tap ☰ → set up your persona first</div>
+      <h2>ready when you are</h2>
+      <p>Paste what {{char}} said and tell me what you want to do next. The reply will appear here.</p>
     </div>
   </div>
 
-  <!-- ==== INPUT BAR ==== -->
+  <!-- ============ INPUT BAR ============ -->
   <div class="input-bar" id="inputBar" style="display:none">
     <div class="input-block char">
       <div class="input-block-label">
         <span class="dot"></span>
-        <span>{{char}}'s message</span>
+        <span>{{char}}'s last message</span>
       </div>
-      <textarea id="charInput" placeholder="Paste what {{char}} just said in your roleplay..." rows="2"></textarea>
+      <textarea id="charInput" placeholder="Paste what they just said..." rows="2"></textarea>
     </div>
 
     <div class="input-block note">
       <div class="input-block-label">
         <span class="dot"></span>
-        <span>my direction for {{user}}</span>
+        <span>what should {{user}} do?</span>
       </div>
-      <textarea id="noteInput" placeholder="What should {{user}} do or say? e.g. 'flirt but stay cautious', 'kiss them', 'push them away angrily'..." rows="2"></textarea>
+      <textarea id="noteInput" placeholder="e.g. 'flirt back', 'push them away', 'kiss them'..." rows="2"></textarea>
     </div>
 
     <div class="input-controls">
@@ -949,33 +1220,33 @@
     </div>
   </div>
 
-  <!-- ==== RIGHT DRAWER ==== -->
+  <!-- ============ RIGHT DRAWER ============ -->
   <aside class="drawer right" id="rightDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">settings</div>
+      <div class="drawer-title">My Profile</div>
       <button class="drawer-close" data-close="right">✕</button>
     </div>
 
     <div class="panel-body">
       <div class="panel-section">
-        <div class="panel-title">My Persona</div>
-        <div class="panel-subtitle">how {{user}} is written</div>
+        <div class="panel-title">Your {{user}}</div>
+        <div class="panel-subtitle">how the AI writes you</div>
 
         <div class="field">
           <label class="field-label">Name</label>
-          <input type="text" id="userName" placeholder="e.g. Mira">
+          <input type="text" id="userName" placeholder="Your character's name">
         </div>
         <div class="field">
           <label class="field-label">Appearance</label>
-          <textarea id="userAppearance" placeholder="short black hair, gold eyes, scar across the left brow, petite build..."></textarea>
+          <textarea id="userAppearance" placeholder="Hair, eyes, build, distinguishing features..."></textarea>
         </div>
         <div class="field">
-          <label class="field-label">Dress / Outfit</label>
-          <textarea id="userDress" placeholder="black leather jacket, ripped jeans, silver rings on every finger..."></textarea>
+          <label class="field-label">Outfit / Style</label>
+          <textarea id="userDress" placeholder="What you're wearing, your style..."></textarea>
         </div>
         <div class="field">
           <label class="field-label">Personality</label>
-          <textarea id="userPersonality" placeholder="dry humor, slow to trust, fiercely loyal once she opens up. Speaks bluntly. Hates being touched without permission..."></textarea>
+          <textarea id="userPersonality" placeholder="How you act, talk, what you like and dislike..."></textarea>
         </div>
         <div class="save-status" id="personaSaveStatus">✓ saved</div>
       </div>
@@ -983,20 +1254,20 @@
       <hr class="divider">
 
       <div class="panel-section" id="charPanel" style="display:none">
-        <div class="panel-title" id="activeCharTitle">Active Character</div>
-        <div class="panel-subtitle">scenario context</div>
+        <div class="panel-title" id="activeCharTitle">Current Character</div>
+        <div class="panel-subtitle">who you're chatting with</div>
 
         <div class="field">
-          <label class="field-label">Character Name</label>
-          <input type="text" id="charName" placeholder="e.g. Kaelen">
+          <label class="field-label">{{char}} Name</label>
+          <input type="text" id="charName">
         </div>
         <div class="field">
-          <label class="field-label">Scenario / Setup (optional)</label>
-          <textarea id="charScenario" placeholder="Who they are, where you met, what's happening..." style="min-height:100px"></textarea>
+          <label class="field-label">Scenario / Setup</label>
+          <textarea id="charScenario" placeholder="The story setup, where you met, what's happening..." style="min-height:100px"></textarea>
         </div>
         <div class="checkbox-row">
           <input type="checkbox" id="charNsfw">
-          <label for="charNsfw">Allow NSFW for this character</label>
+          <label for="charNsfw">Allow NSFW content with this character</label>
         </div>
         <div class="save-status" id="charSaveStatus">✓ saved</div>
       </div>
@@ -1006,22 +1277,22 @@
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
 </div>
 
-<!-- ==== NEW CHAR MODAL ==== -->
+<!-- ============ NEW CHAR MODAL ============ -->
 <div class="modal-backdrop" id="newCharModal">
   <div class="modal">
     <h2>new character</h2>
-    <div class="modal-sub">✦ a new chat room</div>
+    <div class="modal-sub">✦ start a new chat</div>
     <div class="field">
-      <label class="field-label">Character Name</label>
-      <input type="text" id="newCharName" placeholder="e.g. Kaelen the Witch-King">
+      <label class="field-label">{{char}} Name</label>
+      <input type="text" id="newCharName" placeholder="e.g. Kaz, Kaelen, Mira">
     </div>
     <div class="field">
       <label class="field-label">Scenario (optional)</label>
-      <textarea id="newCharScenario" placeholder="Brief description — can be filled in later" style="min-height:100px"></textarea>
+      <textarea id="newCharScenario" placeholder="Brief setup — can be filled in later" style="min-height:100px"></textarea>
     </div>
     <div class="checkbox-row">
       <input type="checkbox" id="newCharNsfw">
-      <label for="newCharNsfw">Allow NSFW content for this character</label>
+      <label for="newCharNsfw">Allow NSFW with this character</label>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" id="cancelNewChar">Cancel</button>
@@ -1030,26 +1301,26 @@
   </div>
 </div>
 
-<!-- ==== SETTINGS MODAL ==== -->
+<!-- ============ SETTINGS MODAL ============ -->
 <div class="modal-backdrop" id="settingsModal">
   <div class="modal">
-    <h2>api setup</h2>
-    <div class="modal-sub">✦ openrouter — free models</div>
+    <h2>api key</h2>
+    <div class="modal-sub">✦ free models via openrouter</div>
 
     <div class="field">
       <label class="field-label">OpenRouter API Key</label>
       <input type="password" id="apiKey" placeholder="sk-or-v1-...">
       <div class="field-hint">
-        Get yours at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>. Stored only in your browser.
+        Get a free one at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>. Stored only in this browser.
       </div>
     </div>
 
     <div class="field">
-      <label class="field-label">Model</label>
+      <label class="field-label">AI Model</label>
       <select id="modelSelect">
-        <optgroup label="✦ Best for roleplay (free)">
-          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 — best for creative/NSFW</option>
-          <option value="deepseek/deepseek-r1:free">DeepSeek R1 — strong reasoning</option>
+        <optgroup label="✦ Best for roleplay">
+          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 — best for creative / NSFW</option>
+          <option value="deepseek/deepseek-r1:free">DeepSeek R1 — deeper reasoning</option>
           <option value="meta-llama/llama-4-maverick:free">Llama 4 Maverick</option>
         </optgroup>
         <optgroup label="Other free models">
@@ -1060,13 +1331,48 @@
         </optgroup>
       </select>
       <div class="field-hint">
-        Free tier: ~50 requests/day per model. If one hits its limit, switch.
+        Free: ~50 requests/day per model. If one hits its limit, switch to another.
       </div>
     </div>
 
     <div class="modal-actions">
       <button class="btn-secondary" id="cancelSettings">Cancel</button>
       <button class="btn-primary" id="saveSettings">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HELP MODAL ============ -->
+<div class="modal-backdrop" id="helpModal">
+  <div class="modal">
+    <h2>how to use</h2>
+    <div class="modal-sub">✦ a quick walkthrough</div>
+
+    <div class="help-content">
+      <h3>What this is</h3>
+      <p>A helper that writes your <code>{{user}}</code> replies for Crushon.AI (or any roleplay app). You paste what the character said, tell it what you want to do, and copy the reply back into Crushon.</p>
+
+      <h3>First-time setup</h3>
+      <p><span class="step-num-inline">1</span> Get a free API key at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent)">openrouter.ai/keys</a> (sign in with Google). Paste it in <strong>⚙ API Key</strong>.</p>
+      <p><span class="step-num-inline">2</span> Tap <strong>👤 Me</strong> (top right) → fill in your character's name, appearance, outfit, personality.</p>
+      <p><span class="step-num-inline">3</span> Tap <strong>☰ Chats</strong> → <strong>+ New</strong> → name the character you're roleplaying with.</p>
+
+      <h3>Each turn</h3>
+      <p><span class="step-num-inline">A</span> Copy what <code>{{char}}</code> just said in Crushon → paste in the green box.</p>
+      <p><span class="step-num-inline">B</span> Write a quick direction in the rose box — what you want to do/say.</p>
+      <p><span class="step-num-inline">C</span> Tap <strong>Generate →</strong> → wait → tap <strong>📋 copy</strong> on the reply → paste into Crushon.</p>
+
+      <h3>NSFW</h3>
+      <p>To allow NSFW, two switches: turn it on per character (in Me drawer), then tap the <strong style="color:var(--rose)">NSFW</strong> pill above the Generate button.</p>
+
+      <h3>Tips</h3>
+      <p>· Tap <strong>↻ regen</strong> if you don't like a reply — swipe between versions with <strong>‹ 1/2 ›</strong>.</p>
+      <p>· Tap <strong>✎ edit</strong> to fix small things before copying.</p>
+      <p>· If "Load failed" — open this site from your hosted URL (like GitHub Pages), not as a file.</p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="closeHelp">Got it</button>
     </div>
   </div>
 </div>
@@ -1078,10 +1384,11 @@
    STATE
 ======================================================== */
 const STORAGE = {
-  PERSONA: 'persona_user_v2',
-  CHARS: 'persona_chars_v2',
-  SETTINGS: 'persona_settings_v2',
-  ACTIVE: 'persona_active_v2',
+  PERSONA: 'persona_user_v3',
+  CHARS: 'persona_chars_v3',
+  SETTINGS: 'persona_settings_v3',
+  ACTIVE: 'persona_active_v3',
+  SEEN_WELCOME: 'persona_seen_welcome_v3',
 };
 
 let state = {
@@ -1117,7 +1424,7 @@ function toast(msg, type = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
-  setTimeout(() => { t.className = 'toast ' + type; }, 2600);
+  setTimeout(() => { t.className = 'toast ' + type; }, 2800);
 }
 
 function escapeHtml(s) {
@@ -1158,15 +1465,50 @@ function closeDrawers() {
 }
 
 /* ========================================================
+   ONBOARDING STATE
+======================================================== */
+function isStepDone(step) {
+  if (step === 'api') return !!state.settings.apiKey;
+  if (step === 'profile') return !!(state.persona.name || state.persona.appearance || state.persona.personality);
+  if (step === 'char') return Object.keys(state.characters).length > 0;
+  return false;
+}
+
+function updateWelcomeSteps() {
+  ['api', 'profile', 'char'].forEach(step => {
+    const card = document.getElementById('step' + step.charAt(0).toUpperCase() + step.slice(1));
+    const num = document.getElementById('step' + step.charAt(0).toUpperCase() + step.slice(1) + 'Num');
+    if (!card) return;
+    if (isStepDone(step)) {
+      card.classList.add('done');
+      card.classList.remove('active');
+      num.textContent = '✓';
+    } else {
+      card.classList.remove('done');
+      num.textContent = ['api','profile','char'].indexOf(step) + 1;
+    }
+  });
+
+  // mark first incomplete as active
+  for (const step of ['api', 'profile', 'char']) {
+    const card = document.getElementById('step' + step.charAt(0).toUpperCase() + step.slice(1));
+    if (!isStepDone(step)) {
+      card.classList.add('active');
+      break;
+    }
+  }
+}
+
+/* ========================================================
    RENDER
 ======================================================== */
 function renderSidebar() {
   const list = document.getElementById('charList');
   const chars = Object.values(state.characters).sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
   if (chars.length === 0) {
-    list.innerHTML = `<div style="padding:24px 14px; color:var(--ink-faint); font-size:12px; text-align:center; line-height:1.6;">
-      <div style="font-family:'Fraunces',serif; font-style:italic; font-size:14px; margin-bottom:6px;">no one here yet</div>
-      tap <strong style="color:var(--accent)">+</strong> to add a character
+    list.innerHTML = `<div class="char-empty">
+      <div class="char-empty-line">no characters yet</div>
+      tap <strong style="color:var(--accent)">+ New</strong> above to add one
     </div>`;
     return;
   }
@@ -1178,7 +1520,7 @@ function renderSidebar() {
           <span>${escapeHtml(c.name || 'untitled')}</span>
           ${c.nsfw ? '<span class="nsfw-tag">18+</span>' : ''}
         </div>
-        <div class="char-meta">${turnCount} turns · ${timeAgo(c.lastActive || c.createdAt)}</div>
+        <div class="char-meta">${turnCount} ${turnCount === 1 ? 'turn' : 'turns'} · ${timeAgo(c.lastActive || c.createdAt)}</div>
         <button class="char-delete" data-del="${c.id}">✕</button>
       </div>
     `;
@@ -1186,35 +1528,46 @@ function renderSidebar() {
 }
 
 function renderMain() {
-  const empty = document.getElementById('emptyState');
+  const welcome = document.getElementById('welcome');
+  const emptyChat = document.getElementById('emptyChat');
   const inputBar = document.getElementById('inputBar');
-  const chatArea = document.getElementById('chatArea');
   const charPanel = document.getElementById('charPanel');
   const headerTitle = document.getElementById('headerTitle');
   const scenarioHint = document.getElementById('scenarioHint');
+  const chatArea = document.getElementById('chatArea');
 
   const ch = state.activeId ? state.characters[state.activeId] : null;
 
   if (!ch) {
-    empty.style.display = 'flex';
+    welcome.style.display = 'flex';
+    emptyChat.style.display = 'none';
     inputBar.style.display = 'none';
     charPanel.style.display = 'none';
-    headerTitle.innerHTML = 'no character <em>selected</em>';
-    scenarioHint.textContent = 'tap menu → create one';
+    headerTitle.innerHTML = 'Welcome';
+    scenarioHint.textContent = "let's get you set up";
     [...chatArea.querySelectorAll('.turn')].forEach(m => m.remove());
+    updateWelcomeSteps();
     return;
   }
 
-  empty.style.display = 'none';
+  welcome.style.display = 'none';
   inputBar.style.display = 'flex';
   charPanel.style.display = 'block';
   headerTitle.innerHTML = `<em>${escapeHtml(ch.name || 'untitled')}</em>`;
-  scenarioHint.textContent = (ch.turns && ch.turns.length > 0) ? `✦ ${ch.turns.length} turns` : '✦ first message awaits';
+
+  const turnCount = ch.turns?.length || 0;
+  scenarioHint.textContent = turnCount > 0 ? `✦ ${turnCount} ${turnCount === 1 ? 'turn' : 'turns'} written` : '✦ ready for first turn';
 
   document.getElementById('charName').value = ch.name || '';
   document.getElementById('charScenario').value = ch.scenario || '';
   document.getElementById('charNsfw').checked = !!ch.nsfw;
-  document.getElementById('activeCharTitle').textContent = ch.name || 'Active Character';
+  document.getElementById('activeCharTitle').textContent = ch.name || 'Current Character';
+
+  if (turnCount === 0) {
+    emptyChat.style.display = 'flex';
+  } else {
+    emptyChat.style.display = 'none';
+  }
 
   renderTurns();
 }
@@ -1235,7 +1588,6 @@ function renderTurns() {
 
     let html = '';
 
-    // {{char}}'s message
     if (turn.charMsg) {
       html += `
         <div class="turn-section">
@@ -1249,7 +1601,6 @@ function renderTurns() {
       `;
     }
 
-    // my direction
     if (turn.note) {
       html += `
         <div class="turn-section">
@@ -1263,12 +1614,11 @@ function renderTurns() {
       `;
     }
 
-    // {{user}}'s reply
     html += `
       <div class="turn-section user-reply">
         <div class="turn-label user">
           <span class="dot"></span>
-          <span>${escapeHtml(state.persona.name || '{{user}}')} replied</span>
+          <span>${escapeHtml(state.persona.name || 'me')} replied</span>
           ${hasAlts ? `
             <span class="swipe-nav">
               <button class="swipe-btn" data-swipe="${idx}" data-dir="-1" ${curAlt === 0 ? 'disabled' : ''}>‹</button>
@@ -1335,7 +1685,7 @@ function deleteChar(id) {
 }
 
 /* ========================================================
-   PROMPT BUILDING
+   PROMPT
 ======================================================== */
 function buildSystemPrompt() {
   const ch = state.characters[state.activeId];
@@ -1352,7 +1702,7 @@ function buildSystemPrompt() {
 ═══ {{user}} — the character you write AS ═══
 Name: ${p.name || '(unnamed — refer to as "I")'}
 Appearance: ${p.appearance || '(not specified)'}
-Dress / Outfit: ${p.dress || '(not specified)'}
+Outfit / Style: ${p.dress || '(not specified)'}
 Personality: ${p.personality || '(not specified)'}
 
 ═══ {{char}} — who {{user}} is responding to ═══
@@ -1377,7 +1727,6 @@ function buildMessages(currentCharMsg, currentNote) {
   const ch = state.characters[state.activeId];
   const msgs = [];
 
-  // history: each prior turn becomes user(char msg + note) → assistant(user reply)
   for (const turn of ch.turns) {
     const reply = turn.alternatives ? turn.alternatives[turn.activeAlt ?? 0] : turn.userReply;
     let userBlock = '';
@@ -1388,7 +1737,6 @@ function buildMessages(currentCharMsg, currentNote) {
     msgs.push({ role: 'assistant', content: reply || '' });
   }
 
-  // current turn
   let curBlock = '';
   if (currentCharMsg) curBlock += `[{{char}} ${ch.name}]:\n${currentCharMsg}`;
   if (currentNote) curBlock += (curBlock ? '\n\n' : '') + `[Direction for {{user}}: ${currentNote}]`;
@@ -1399,11 +1747,11 @@ function buildMessages(currentCharMsg, currentNote) {
 }
 
 /* ========================================================
-   API CALL
+   API
 ======================================================== */
 async function callOpenRouter(systemPrompt, messages) {
   if (!state.settings.apiKey) {
-    throw new Error('No API key. Tap menu → ⚙ API');
+    throw new Error('No API key yet. Tap ☰ Chats → ⚙ API Key');
   }
 
   const fullMessages = [
@@ -1411,21 +1759,26 @@ async function callOpenRouter(systemPrompt, messages) {
     ...messages,
   ];
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + state.settings.apiKey,
-      'HTTP-Referer': window.location.origin || 'https://persona.local',
-      'X-Title': 'Persona',
-    },
-    body: JSON.stringify({
-      model: state.settings.model,
-      messages: fullMessages,
-      max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
-      temperature: 0.9,
-    }),
-  });
+  let res;
+  try {
+    res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + state.settings.apiKey,
+        'HTTP-Referer': window.location.origin || 'https://persona.local',
+        'X-Title': 'Persona',
+      },
+      body: JSON.stringify({
+        model: state.settings.model,
+        messages: fullMessages,
+        max_tokens: state.length === 'long' ? 1500 : state.length === 'medium' ? 700 : 300,
+        temperature: 0.9,
+      }),
+    });
+  } catch (netErr) {
+    throw new Error('Network blocked. If you opened this as a file, host it on GitHub Pages or Netlify. See ? Help.');
+  }
 
   if (!res.ok) {
     const errText = await res.text();
@@ -1434,14 +1787,14 @@ async function callOpenRouter(systemPrompt, messages) {
       const errJson = JSON.parse(errText);
       msg += ': ' + (errJson.error?.message || errText.slice(0, 150));
     } catch { msg += ': ' + errText.slice(0, 150); }
-    if (res.status === 429) msg = 'Rate limit hit. Switch model in ⚙ API.';
-    if (res.status === 401) msg = 'Invalid API key. Check ⚙ API.';
+    if (res.status === 429) msg = 'Rate limit hit. Switch model in ⚙ API Key.';
+    if (res.status === 401) msg = 'Invalid API key. Check ⚙ API Key.';
     throw new Error(msg);
   }
 
   const data = await res.json();
   const text = data.choices?.[0]?.message?.content?.trim() || '';
-  if (!text) throw new Error('Empty response — try again or switch model.');
+  if (!text) throw new Error('Empty response. Try regen or switch model.');
   return text;
 }
 
@@ -1465,16 +1818,15 @@ async function generate() {
   btn.disabled = true;
   lbl.innerHTML = '<span class="loader"><span class="dot-anim"></span><span class="dot-anim"></span><span class="dot-anim"></span></span>';
 
-  // add pending turn
   const pendingTurn = {
-    charMsg,
-    note,
+    charMsg, note,
     userReply: '...',
     ts: Date.now(),
     pending: true,
   };
   ch.turns.push(pendingTurn);
   ch.lastActive = Date.now();
+  document.getElementById('emptyChat').style.display = 'none';
   renderTurns();
 
   try {
@@ -1482,11 +1834,9 @@ async function generate() {
     const msgs = buildMessages(charMsg, note);
     const reply = await callOpenRouter(sys, msgs);
 
-    // replace pending with real
     ch.turns.pop();
     ch.turns.push({
-      charMsg,
-      note,
+      charMsg, note,
       alternatives: [reply],
       activeAlt: 0,
       ts: Date.now(),
@@ -1495,13 +1845,13 @@ async function generate() {
     renderSidebar();
     renderTurns();
 
-    // clear inputs
     document.getElementById('charInput').value = '';
     document.getElementById('noteInput').value = '';
     autoResize(document.getElementById('charInput'));
     autoResize(document.getElementById('noteInput'));
   } catch (e) {
     ch.turns.pop();
+    if (ch.turns.length === 0) document.getElementById('emptyChat').style.display = 'flex';
     renderTurns();
     toast(e.message || 'something went wrong', 'danger');
   } finally {
@@ -1515,7 +1865,6 @@ async function regenerate(idx) {
   const turn = ch.turns[idx];
   if (!turn) return;
 
-  // build history up to (but not including) this turn
   const originalTurns = ch.turns;
   ch.turns = ch.turns.slice(0, idx);
 
@@ -1568,6 +1917,7 @@ function deleteTurn(idx) {
   saveChars();
   renderTurns();
   renderSidebar();
+  if (ch.turns.length === 0) document.getElementById('emptyChat').style.display = 'flex';
 }
 
 function editTurn(idx) {
@@ -1609,11 +1959,11 @@ function swipeAlt(idx, dir) {
 }
 
 /* ========================================================
-   EXPORT / IMPORT
+   EXPORT/IMPORT
 ======================================================== */
 function exportAll() {
   const data = {
-    version: 2,
+    version: 3,
     exportedAt: new Date().toISOString(),
     persona: state.persona,
     characters: state.characters,
@@ -1652,7 +2002,7 @@ function importFile(file) {
 ======================================================== */
 function autoResize(ta) {
   ta.style.height = 'auto';
-  ta.style.height = Math.min(ta.scrollHeight, 140) + 'px';
+  ta.style.height = Math.min(ta.scrollHeight, 130) + 'px';
 }
 
 function debounce(fn, ms) {
@@ -1685,6 +2035,16 @@ function bind() {
     if (item) selectChar(item.dataset.id);
   });
 
+  // welcome step clicks
+  document.querySelectorAll('.step-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const action = card.dataset.action;
+      if (action === 'api') document.getElementById('settingsBtn').click();
+      else if (action === 'profile') openDrawer('right');
+      else if (action === 'char') document.getElementById('newCharBtn').click();
+    });
+  });
+
   // new char
   document.getElementById('newCharBtn').addEventListener('click', () => {
     document.getElementById('newCharName').value = '';
@@ -1710,6 +2070,7 @@ function bind() {
     document.getElementById('apiKey').value = state.settings.apiKey || '';
     document.getElementById('modelSelect').value = state.settings.model;
     document.getElementById('settingsModal').classList.add('show');
+    closeDrawers();
   });
   document.getElementById('cancelSettings').addEventListener('click', () => {
     document.getElementById('settingsModal').classList.remove('show');
@@ -1719,7 +2080,17 @@ function bind() {
     state.settings.model = document.getElementById('modelSelect').value;
     saveSettings();
     document.getElementById('settingsModal').classList.remove('show');
-    toast('settings saved', 'success');
+    toast('API key saved', 'success');
+    updateWelcomeSteps();
+  });
+
+  // help
+  document.getElementById('helpBtn').addEventListener('click', () => {
+    document.getElementById('helpModal').classList.add('show');
+    closeDrawers();
+  });
+  document.getElementById('closeHelp').addEventListener('click', () => {
+    document.getElementById('helpModal').classList.remove('show');
   });
 
   // persona auto-save
@@ -1734,7 +2105,8 @@ function bind() {
       const s = document.getElementById('personaSaveStatus');
       s.classList.add('show');
       setTimeout(() => s.classList.remove('show'), 1200);
-      renderTurns(); // update {{user}} label if name changed
+      renderTurns();
+      updateWelcomeSteps();
     }, 400));
   });
 
@@ -1764,7 +2136,7 @@ function bind() {
     updateNsfwToggle();
   });
 
-  // length pills
+  // pills
   document.querySelectorAll('[data-length]').forEach(p => {
     p.addEventListener('click', () => {
       document.querySelectorAll('[data-length]').forEach(x => x.classList.remove('active'));
@@ -1773,12 +2145,12 @@ function bind() {
     });
   });
 
-  // nsfw toggle
+  // nsfw
   document.getElementById('nsfwToggle').addEventListener('click', () => {
     const ch = state.characters[state.activeId];
     if (!ch) return;
     if (!ch.nsfw) {
-      toast('enable NSFW for this character in ⚙ settings first', 'danger');
+      toast('first enable NSFW in 👤 Me drawer', 'danger');
       return;
     }
     state.nsfwSession = !state.nsfwSession;
@@ -1793,7 +2165,6 @@ function bind() {
 
   document.getElementById('generateBtn').addEventListener('click', generate);
 
-  // turn interactions
   document.getElementById('chatArea').addEventListener('click', e => {
     const copyEl = e.target.closest('[data-copy]');
     if (copyEl) return copyTurn(+copyEl.dataset.copy);
@@ -1829,12 +2200,7 @@ function bind() {
 load();
 bind();
 renderAll();
-
-if (!state.settings.apiKey) {
-  setTimeout(() => {
-    if (!state.settings.apiKey) document.getElementById('settingsModal').classList.add('show');
-  }, 600);
-}
+updateWelcomeSteps();
 </script>
 </body>
 </html>
